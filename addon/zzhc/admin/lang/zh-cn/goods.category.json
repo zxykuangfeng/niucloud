@@ -1,0 +1,15 @@
+{
+      "categoryName":"分类名称",
+      "categoryNamePlaceholder":"请输入分类名称",
+      "categoryImage":"分类图片",
+      "categoryImagePlaceholder":"请输入分类图片",
+      "sort":"排序",
+      "sortPlaceholder":"请输入排序",
+      "status":"状态",
+      "statusPlaceholder":"请输入状态",
+      "addCategory":"添加项目分类",
+      "updateCategory":"编辑项目分类",
+      "categoryDeleteTips":"确定要删除该数据吗？",
+      "startDate":"请选择开始时间",
+      "endDate":"请选择结束时间"
+}

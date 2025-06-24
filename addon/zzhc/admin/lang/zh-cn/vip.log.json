@@ -1,0 +1,21 @@
+{
+      "siteId":"站点id",
+      "siteIdPlaceholder":"请输入站点id",
+      "vipMemberId":"VIP会员id",
+      "vipMemberIdPlaceholder":"请输入VIP会员id",
+      "mainType":"操作人类型",
+      "mainTypePlaceholder":"请输入操作人类型",
+      "mainId":"操作人id",
+      "mainIdPlaceholder":"请输入操作人id",
+      "days":"时长(天)",
+      "daysPlaceholder":"请输入时长(天)",
+      "type":"操作类型",
+      "typePlaceholder":"请输入操作类型",
+      "content":"日志内容",
+      "contentPlaceholder":"请输入日志内容",
+      "addLog":"添加VIP会员操作日志",
+      "updateLog":"编辑VIP会员操作日志",
+      "logDeleteTips":"确定要删除该数据吗？",
+      "startDate":"请选择开始时间",
+      "endDate":"请选择结束时间"
+}

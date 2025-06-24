@@ -1,0 +1,48 @@
+@import url("./iconfont.css");
+
+.class-select {
+	position: relative;
+	font-weight: bold;
+
+	&::after {
+		content: "";
+		position: absolute;
+		bottom: 0;
+		height: 6rpx;
+		background-color: var(--primary-color);
+		width: 90%;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}
+
+/* 单行超出隐藏 */
+.using-hidden {
+	word-break: break-all;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+	white-space: break-spaces;
+}
+
+/* 多行超出隐藏 */
+.multi-hidden {
+	word-break: break-all;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+
+.tab-bar-placeholder {
+	padding-bottom: calc(constant(safe-area-inset-bottom) + 100rpx);
+	padding-bottom: calc(env(safe-area-inset-bottom) + 100rpx);
+}
+
+.tab-bar {
+	padding-bottom: calc(constant(safe-area-inset-bottom) + 9rpx);
+	padding-bottom: calc(env(safe-area-inset-bottom) + 9rpx);
+}

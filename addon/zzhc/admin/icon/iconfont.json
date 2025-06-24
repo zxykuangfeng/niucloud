@@ -1,0 +1,107 @@
+{
+  "id": "4725173",
+  "name": "理发店预约系统",
+  "font_family": "zzhc",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "32228177",
+      "name": "卡券包",
+      "font_class": "kaquanbao",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "5755522",
+      "name": "统计-粗线条1",
+      "font_class": "tongji",
+      "unicode": "e689",
+      "unicode_decimal": 59017
+    },
+    {
+      "icon_id": "20587129",
+      "name": "门店",
+      "font_class": "mendian",
+      "unicode": "e6c4",
+      "unicode_decimal": 59076
+    },
+    {
+      "icon_id": "1517312",
+      "name": "订单",
+      "font_class": "dingdan1",
+      "unicode": "e64f",
+      "unicode_decimal": 58959
+    },
+    {
+      "icon_id": "15643746",
+      "name": "项目管理",
+      "font_class": "xiangmuguanli",
+      "unicode": "e6b2",
+      "unicode_decimal": 59058
+    },
+    {
+      "icon_id": "1651420",
+      "name": "示忙",
+      "font_class": "shimang",
+      "unicode": "e63e",
+      "unicode_decimal": 58942
+    },
+    {
+      "icon_id": "5387461",
+      "name": "单选未选中",
+      "font_class": "noselect",
+      "unicode": "ead9",
+      "unicode_decimal": 60121
+    },
+    {
+      "icon_id": "7408738",
+      "name": "单选-选中",
+      "font_class": "select",
+      "unicode": "e649",
+      "unicode_decimal": 58953
+    },
+    {
+      "icon_id": "9114393",
+      "name": "45停止",
+      "font_class": "tingzhi",
+      "unicode": "e63f",
+      "unicode_decimal": 58943
+    },
+    {
+      "icon_id": "12615563",
+      "name": "用餐",
+      "font_class": "yongcan",
+      "unicode": "e65b",
+      "unicode_decimal": 58971
+    },
+    {
+      "icon_id": "15336631",
+      "name": "下班",
+      "font_class": "xiaban",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "34206099",
+      "name": "上班",
+      "font_class": "shangban",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "11882443",
+      "name": "员工管理",
+      "font_class": "yuangong",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "23262773",
+      "name": "图片轮播",
+      "font_class": "tupianlunbo",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    }
+  ]
+}

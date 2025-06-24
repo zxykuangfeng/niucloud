@@ -1,0 +1,21 @@
+{
+      "categoryId":"归属分类",
+      "categoryIdPlaceholder":"请选择分类",
+      "goodsName":"项目名称",
+      "goodsNamePlaceholder":"请输入项目名称",
+      "goodsImage":"项目图片",
+      "goodsImagePlaceholder":"请输入项目图片",
+      "duration":"服务时长",
+      "durationPlaceholder":"请输入服务时长",
+      "price":"项目价格",
+      "pricePlaceholder":"请输入项目价格",
+      "sort":"排序",
+      "sortPlaceholder":"请输入排序",
+      "status":"状态",
+      "statusPlaceholder":"请输入状态",
+      "addGoods":"添加项目",
+      "updateGoods":"编辑项目",
+      "goodsDeleteTips":"确定要删除该数据吗？",
+      "startDate":"请选择开始时间",
+      "endDate":"请选择结束时间"
+}

@@ -1,0 +1,17 @@
+{
+      "memberId":"会员id",
+      "memberIdPlaceholder":"请输入会员id",
+      "headimg":"会员头像",
+      "headimgPlaceholder":"请输入会员头像",
+      "nickname":"会员昵称",
+      "nicknamePlaceholder":"请输入会员昵称",
+      "mobile":"会员手机号",
+      "mobilePlaceholder":"请输入会员手机号",
+      "overdueTime":"到期时间",
+      "overdueTimePlaceholder":"请输入到期时间",
+      "addMember":"添加办卡会员",
+      "updateMember":"编辑办卡会员",
+      "memberDeleteTips":"确定要删除该数据吗？",
+      "startDate":"请选择开始时间",
+      "endDate":"请选择结束时间"
+}

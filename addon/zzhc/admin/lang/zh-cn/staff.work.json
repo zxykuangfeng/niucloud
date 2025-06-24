@@ -1,0 +1,17 @@
+{
+      "storeId":"门店",
+      "storeIdPlaceholder":"请选择门店",
+      "staffId":"员工",
+      "staffIdPlaceholder":"请选择员工",
+      "workStatus":"考勤状态",
+      "workStatusPlaceholder":"请选择考勤状态",
+      "expDuration":"预计用时(分钟)",
+      "expDurationPlaceholder":"请输入预计用时(分钟)",
+      "createTime":"添加时间",
+      "createTimePlaceholder":"请输入添加时间",
+      "addWork":"添加考勤管理",
+      "updateWork":"编辑考勤管理",
+      "workDeleteTips":"确定要删除该数据吗？",
+      "startDate":"请选择开始时间",
+      "endDate":"请选择结束时间"
+}

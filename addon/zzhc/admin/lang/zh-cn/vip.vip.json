@@ -1,0 +1,17 @@
+{
+      "vipName":"名称",
+      "vipNamePlaceholder":"请输入名称",
+      "days":"时长",
+      "daysPlaceholder":"请输入时长",
+      "price":"售价",
+      "pricePlaceholder":"请输入售价",
+      "sort":"排序",
+      "sortPlaceholder":"请输入排序",
+      "status":"状态",
+      "statusPlaceholder":"请输入状态",
+      "addVip":"添加VIP套餐",
+      "updateVip":"编辑VIP套餐",
+      "vipDeleteTips":"确定要删除该数据吗？",
+      "startDate":"请选择开始时间",
+      "endDate":"请选择结束时间"
+}

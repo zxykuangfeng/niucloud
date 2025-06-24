@@ -1,0 +1,14 @@
+{
+    "orderNo":"订单编号",
+    "orderInfo": "订单信息",
+	"outTradeNo": "交易流水号",
+	"orderType": "订单类型",
+	"orderForm": "订单来源",
+	"orderStatus": "订单状态",
+	"orderCancelTips": "确定要取消该订单吗？",
+	"payType":"支付方式",
+	"storeName": "门店名称",
+	"storeAddress": "门店地址",
+	"storeMobile": "联系电话",
+	"tradeTime": "营业时间"
+}

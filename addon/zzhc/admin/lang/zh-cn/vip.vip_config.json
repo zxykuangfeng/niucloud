@@ -1,0 +1,11 @@
+{
+    "isEnable":"是否启用",
+    "isEnableClose":"关闭",
+    "isEnableOpen":"开启",
+	"discount":"享受折扣",
+	"discountPlaceholder":"请输入折扣",
+	"discountTips":"开通会员卡后享受的折扣，折扣范围0.1-10，9.5代表9.5折",
+	"statement":"权益说明",
+	"banner":"Banner图片",
+	"statementPlaceholder":"请输入权益说明"
+}

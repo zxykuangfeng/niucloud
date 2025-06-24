@@ -1,0 +1,23 @@
+{
+      "storeId":"上班门店",
+      "storeIdPlaceholder":"全部",
+      "memberId":"绑定会员",
+      "staffHeadimg":"员工头像",
+	  "staffRole":"员工角色",
+      "staffName":"员工姓名",
+      "staffNamePlaceholder":"请输入员工姓名",
+      "staffMobile":"联系电话",
+      "staffMobilePlaceholder":"请输入联系电话",
+      "staffPosition":"员工职位",
+      "staffExperience":"工作经验",
+      "staffImage":"员工照片",
+      "workStatus":"考勤状态",
+      "staffContent":"员工介绍",
+      "sort":"排序",
+      "status":"状态",
+      "addStaff":"添加员工",
+      "updateStaff":"编辑员工",
+      "staffDeleteTips":"确定要删除该数据吗？",
+      "startDate":"请选择开始时间",
+      "endDate":"请选择结束时间"
+}

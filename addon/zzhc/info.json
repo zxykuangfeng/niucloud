@@ -1,0 +1,11 @@
+{
+  "title": "理发店预约系统",
+  "desc": "理发店预约系统手机取号到店理发不排队,多门店、用户端、发型师端、店长端。",
+  "key": "zzhc",
+  "version": "1.0.3",
+  "author": "臻君",
+  "type": "app",
+  "support_app": "",
+  "compile":[],
+  "support_version": "1.1.2"
+}

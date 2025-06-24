@@ -1,0 +1,23 @@
+{
+    "pages.barber.list": "取号",
+    "pages.barber.detail": "发型师介绍",
+    "pages.order.list": "订单列表",
+    "pages.order.detail": "订单详情",
+    "pages.member.index": "我的",
+    "pages.store.list": "选择门店",
+    "pages.store.detail": "门店介绍",
+    "pages.goods.select": "选择项目",
+    "pages.coupon.list": "优惠券列表",
+    "pages.coupon.detail": "优惠券详情",
+    "pages.member.coupon": "我的优惠券",
+    "pages.vip.buy": "开通会员卡",
+    "pages.member.vip": "我的会员卡",
+    "pages.merchant.manage.index": "店长端",
+    "pages.merchant.manage.order.list": "门店订单",
+    "pages.merchant.manage.order.detail": "订单详情",
+    "pages.merchant.manage.work.list": "员工考勤",
+    "pages.merchant.barber.index": "发型师端",
+    "pages.merchant.barber.order.list": "预约订单",
+    "pages.merchant.barber.order.detail": "订单详情",
+    "pages.merchant.barber.work.list": "考勤记录"
+}

@@ -1,0 +1,21 @@
+{
+      "orderId":"订单id",
+      "orderIdPlaceholder":"请输入订单id",
+      "mainType":"操作人类型",
+      "mainTypePlaceholder":"请输入操作人类型",
+      "mainId":"操作人id",
+      "mainIdPlaceholder":"请输入操作人id",
+      "status":"订单状态",
+      "statusPlaceholder":"请输入订单状态",
+      "type":"操作类型",
+      "typePlaceholder":"请输入操作类型",
+      "content":"日志内容",
+      "contentPlaceholder":"请输入日志内容",
+      "createTime":"创建时间",
+      "createTimePlaceholder":"请输入创建时间",
+      "addOrderLog":"添加订单操作日志",
+      "updateOrderLog":"编辑订单操作日志",
+      "orderLogDeleteTips":"确定要删除该数据吗？",
+      "startDate":"请选择开始时间",
+      "endDate":"请选择结束时间"
+}
