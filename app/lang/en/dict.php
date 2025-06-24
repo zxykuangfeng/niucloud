@@ -116,6 +116,7 @@ return [
         'type_alipay' => 'alipay',
         'type_unipay' => 'unipay',
         'type_offline' => 'offlinepay',
+        'type_douyinpay' => 'douyinpay',
     ],
     'dict_agreement' => [
         //菜单类型
@@ -238,6 +239,7 @@ return [
         'wechat_menu' => 'wechat menu',
         'wechat_template_message' => 'template manage',
         'channel_weapp' => 'weapp manage',
+        'channel_douyin' => 'douyin mini',
         'weapp_config' => 'weapp config',
         'weapp_template_message' => 'weapp message',
         'channel_aliapp' => 'aliapp manage',

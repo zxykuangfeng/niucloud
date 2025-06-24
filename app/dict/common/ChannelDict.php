@@ -29,6 +29,8 @@ class ChannelDict
     public const WECHAT = 'wechat';
     //微信小程序
     public const WEAPP = 'weapp';
+    //抖音小程序
+    public const DOUYIN = 'douyin';
 
     public static function getType($type = '')
     {
@@ -38,6 +40,7 @@ class ChannelDict
             self::APP => get_lang('dict_channel.channel_app'),//'手机app'
             self::WECHAT => get_lang('dict_channel.channel_wechat'),//'微信公众号'
             self::WEAPP => get_lang('dict_channel.channel_weapp'),//微信小程序
+            self::DOUYIN => get_lang('dict_channel.channel_douyin'),//抖音小程序
         ];
         if (empty($type)) {
             return $data;

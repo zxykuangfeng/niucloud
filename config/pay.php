@@ -26,7 +26,8 @@ $system = [
         ],
         'offlinepay' => [
             'driver' => 'app\service\core\paytype\CoreOfflineService'
-        ]
+        ],
+        'douyinpay' => [],
     ]
 ];
 

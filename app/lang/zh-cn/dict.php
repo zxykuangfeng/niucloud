@@ -198,7 +198,7 @@ return [
         'type_offline' => '线下支付',
         'type_balancepay' => '余额支付',
         'type_friendspay' => '找朋友帮忙付',
-
+        'type_douyinpay' => '抖音支付',
         'status_wait' => '待支付',
         'status_ing' => '支付中',
         'status_finish' => '已支付',
@@ -302,6 +302,7 @@ return [
         'channel_app' => 'APP',
         'channel_wechat' => '微信公众号',
         'channel_weapp' => '微信小程序',
+        'channel_douyin' => '抖音小程序',
     ],
     //会员提现
     'dict_member_cash_out' => [

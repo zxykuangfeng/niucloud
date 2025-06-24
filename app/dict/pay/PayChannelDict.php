@@ -34,15 +34,19 @@ class PayChannelDict
 //        }
         foreach ($channel as $k => $v) {
             $temp_pay_type = $pay_type;
-            $list[ $k ] = [
+            if ($k != ChannelDict::DOUYIN) {
+                unset($temp_pay_type[PayDict::DOUYINPAY]);
+            }
+            $list[$k] = [
                 'name' => $v,
-                'key' => $k,
-                'pay_type' => $pay_type
+                'key'  => $k,
+                'pay_type' => $temp_pay_type
             ];
             // PC端暂不支持 帮付
             if ($k == ChannelDict::PC) {
-                unset($temp_pay_type[ PayDict::FRIENDSPAY ]);
-                $list[ $k ][ 'pay_type' ] = $temp_pay_type;
+                // unset($temp_pay_type[ PayDict::FRIENDSPAY ]);
+                // $list[ $k ][ 'pay_type' ] = $temp_pay_type;
+                unset($list[$k]['pay_type'][PayDict::FRIENDSPAY]);
             }
         }
         return $list;

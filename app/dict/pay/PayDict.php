@@ -21,7 +21,7 @@ class PayDict
     public const OFFLINEPAY = 'offlinepay';//线下支付
     public const BALANCEPAY = 'balancepay';//余额支付
     public const FRIENDSPAY = 'friendspay';//找朋友帮忙付
-
+    public const DOUYINPAY = 'douyinpay';//抖音支付
 
     public const ON = '1';
     public const OFF = '0';
@@ -37,7 +37,7 @@ class PayDict
     public const OFFLINEPAY_ICON = self::PAY_ICON_PATH . 'offlinepay.png';//线下支付
 
     public const FRIENDSPAY_ICON = self::PAY_ICON_PATH . 'friendspay.png';//找朋友帮忙付
-
+    public const DOUYINPAY_ICON = self::PAY_ICON_PATH . 'douyinpay.png';//抖音支付
     //支付状态
     public const STATUS_WAIT = '0';//待支付
     public const STATUS_ING = '1';//支付中
@@ -88,6 +88,14 @@ class PayDict
                 'setting_component' => '/src/app/views/setting/components/pay-friendspay.vue',
                 'encrypt_params' => [],
             ],
+                        // 抖音支付
+                        self::DOUYINPAY => [
+                            'name' => get_lang('dict_pay.type_douyinpay'),
+                            'key' => self::DOUYINPAY,
+                            'icon' => self::DOUYINPAY_ICON,
+                            'setting_component' => '/src/app/views/setting/components/pay-douyinpay.vue',
+                            'encrypt_params' => ['secret_key'],
+                        ],
         ];
 
         $list = array_merge($list, ...event('PayType'));

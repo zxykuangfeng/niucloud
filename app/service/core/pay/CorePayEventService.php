@@ -144,6 +144,20 @@ class CorePayEventService extends BaseCoreService
                 }
                 if (empty($pay_fun)) throw new PayException('PAYMENT_METHOD_NOT_SCENE');
                 break;
+                case PayDict::DOUYINPAY:
+                    switch ($this->channel) {
+                        case ChannelDict::DOUYIN:
+                            $pay_fun = 'mini';
+                            break;
+                        case ChannelDict::H5:
+                            $pay_fun = 'wap';
+                            break;
+                        case ChannelDict::APP:
+                            $pay_fun = 'app';
+                            break;
+                    }
+                    if (empty($pay_fun)) throw new PayException('PAYMENT_METHOD_NOT_SCENE');
+                    break;
         }
 
         if (empty($pay_fun)) $pay_fun = 'pay';

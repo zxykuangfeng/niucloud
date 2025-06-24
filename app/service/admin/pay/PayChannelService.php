@@ -204,6 +204,13 @@ class PayChannelService extends BaseAdminService
                     'pay_weapp_share_image' => $data[ 'pay_weapp_share_image' ] ?? '/static/resource/images/pay/pay_weapp_share_image.png'// 默认分享图片（小程序）
                 ];
                 break;
+                case PayDict::DOUYINPAY:
+                    $config = [
+                        'app_id' => $data['app_id'] ?? '',
+                        'merchant_id' => $data['merchant_id'] ?? '',
+                        'secret_key' => $data['secret_key'] ?? '',
+                    ];
+                    break;    
             default:
                 $config = $data;
         }
