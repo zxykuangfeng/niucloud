@@ -20,6 +20,8 @@ class MemberRegisterTypeDict
 {
     //微信小程序
     const WEAPP = 'weapp';
+    //抖音小程序
+    const DOUYIN = 'douyin';
     //微信公众号
     const WECHAT = 'wechat';
 
@@ -34,6 +36,7 @@ class MemberRegisterTypeDict
     {
         $data = [
             self::WEAPP => get_lang('dict_member.register_weapp'),//微信小程序
+            self::DOUYIN => get_lang('dict_member.register_douyin'),//抖音小程序
             self::WECHAT => get_lang('dict_member.register_wechat'),//'微信公众号',
             self::MANUAL => get_lang('dict_member.register_manual'),//'手动添加',
             self::USERNAME => get_lang('dict_member.register_username'),//用户名密码登录

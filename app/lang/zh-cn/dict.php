@@ -112,6 +112,7 @@ return [
         //会员端口
         'register_wechat' => '公众号',
         'register_weapp' => '微信小程序',
+        'register_douyin' => '抖音小程序',
         'register_h5' => 'H5',
         'register_pc' => '电脑端',
         'register_app' => 'APP',

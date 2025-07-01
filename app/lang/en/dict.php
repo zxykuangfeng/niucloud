@@ -80,6 +80,7 @@ return [
         'login_mobile' => 'mobile login',
         'login_wechat' => 'wechat login',
         'login_weapp' => 'weapp login',
+        'login_douyin' => 'douyin login',
         'account_point_adjust' => 'adjust point',
         'account_point_recharge_give' => 'recharge give',
         'account_balance_adjust' => 'adjust balance',

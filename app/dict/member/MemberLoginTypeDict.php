@@ -26,7 +26,8 @@ class MemberLoginTypeDict
     public const WECHAT = 'wechat';
     //微信小程序授权登录
     public const WEAPP = 'weapp';
-
+      //抖音小程序授权登录
+      public const DOUYIN = 'douyin';
     public static function getType($type = '')
     {
         $data = [
@@ -34,6 +35,7 @@ class MemberLoginTypeDict
             self::MOBILE => get_lang('dict_member.login_mobile'),//手机号验证码登录,
             self::WECHAT => get_lang('dict_member.login_wechat'),//'微信公众号授权登录',
             self::WEAPP => get_lang('dict_member.login_weapp'),//'微信小程序授权登录',
+            self::DOUYIN => get_lang('dict_member.login_douyin'),//'抖音小程序授权登录',
         ];
         if (empty($type)) {
             return $data;

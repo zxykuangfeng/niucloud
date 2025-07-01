@@ -259,6 +259,7 @@ class LoginService extends BaseApiService
                 $openid_field = match ( $this->channel ) {
                     'wechat' => 'wx_openid',
                     'weapp' => 'weapp_openid',
+                    'douyin' => 'douyin_openid',
                     default => ''
                 };
                 if (!empty($openid_field)) {

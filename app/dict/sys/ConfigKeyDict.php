@@ -17,6 +17,8 @@ class ConfigKeyDict
     public const WECHAT = 'WECHAT';//微信公众号
 
     public const WEAPP = 'weapp';//微信小程序
+    //抖音小程序
+    public const TOUTIAO = 'toutiao';
     public const WECHAT_PAY = 'wechat_pay';//微信支付
     public const ALIPAY = 'alipay';//支付宝支付
     public const OFFLINE_PAY = 'offline_pay';//线下支付

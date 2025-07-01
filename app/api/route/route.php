@@ -57,6 +57,8 @@ Route::group(function() {
     Route::post('wechat/scanlogin', 'wechat.Wechat/scanLogin');
     //小程序通过code登录
     Route::post('weapp/login', 'weapp.Weapp/login');
+    //抖音小程序通过code登录
+    Route::post('toutiao/login', 'toutiao.Toutiao/login');
     //小程序通过code注册
     Route::post('weapp/register', 'weapp.Weapp/register');
     // 获取小程序订阅消息模板id
