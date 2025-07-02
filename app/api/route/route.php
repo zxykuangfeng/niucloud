@@ -59,6 +59,9 @@ Route::group(function() {
     Route::post('weapp/login', 'weapp.Weapp/login');
     //抖音小程序通过code登录
     Route::post('toutiao/login', 'toutiao.Toutiao/login');
+
+        //抖音开放平台获取授权链接
+        Route::get('toutiao/authlink', 'toutiao.Open/getAuthLink');
     //小程序通过code注册
     Route::post('weapp/register', 'weapp.Weapp/register');
     // 获取小程序订阅消息模板id
