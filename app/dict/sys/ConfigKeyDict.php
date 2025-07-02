@@ -34,6 +34,11 @@ class ConfigKeyDict
 
     public const WXOPLATFORM = 'WXOPLATFORM'; // 微信开放平台
 
+     /**
+     * 今日头条 component_ticket
+     */
+    public const TOUTIAO_TICKET = 'toutiao_ticket';
+
     public const WEAPP_AUTHORIZATION_INFO = 'weapp_authorization_info';
 
     public const WECHAT_AUTHORIZATION_INFO = 'wechat_authorization_info';

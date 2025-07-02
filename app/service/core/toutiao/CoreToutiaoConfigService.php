@@ -26,4 +26,15 @@ class CoreToutiaoConfigService extends BaseCoreService
         ];
         return (new CoreConfigService())->setConfig($site_id, ConfigKeyDict::TOUTIAO, $config);
     }
+
+        /**
+     * 获取抖音平台回调地址
+     * @return array
+     */
+    public function getStaticInfo(): array
+    {
+        return [
+            'auth_serve_url' => (string)url('/adminapi/toutiao/server', [], '', true)
+        ];
+    }
 }
