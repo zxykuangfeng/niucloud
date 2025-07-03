@@ -28,4 +28,17 @@ class ToutiaoOpenService extends BaseApiService
         }
         return $this->core_service->genAuthLink($params, $accessToken);
     }
+
+
+
+      /**
+     * 获取小程序二维码
+     * @param string $authorizerAccessToken 授权小程序接口调用凭据
+     * @param array $params 请求参数
+     * @return string 二维码图片路径
+     */
+    public function getQrcode(string $authorizerAccessToken, array $params = []): string
+    {
+        return $this->core_service->getQrcode($params, $authorizerAccessToken);
+    }
 }

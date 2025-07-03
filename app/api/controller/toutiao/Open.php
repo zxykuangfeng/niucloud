@@ -22,4 +22,24 @@ class Open extends BaseApiController
         $service = new ToutiaoOpenService();
         return success($service->getAuthLink($params));
     }
+
+
+
+     /**
+     * 获取抖音小程序二维码
+     * @return Response
+     */
+    public function getQrcode(): Response
+    {
+        $params = $this->request->params([
+            ['authorizer_access_token', ''],
+            ['version', 'latest'],
+            ['path', ''],
+        ]);
+        $accessToken = $params['authorizer_access_token'];
+        unset($params['authorizer_access_token']);
+        $service = new ToutiaoOpenService();
+        $file = $service->getQrcode($accessToken, $params);
+        return success(['path' => $file]);
+    }
 }
