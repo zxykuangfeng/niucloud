@@ -54,6 +54,50 @@ class CoreToutiaoOpenService extends BaseCoreService
         return json_decode($response->getBody()->getContents(), true);
     }
 
+ /**
+     * 通过授权 appid 取回最新的授权码
+     * @param string $authorizationAppid 授权小程序 appid
+     * @param string $componentAccessToken 第三方平台接口凭据
+     * @return array
+     */
+    public function retrieveAuthCode(string $authorizationAppid, string $componentAccessToken): array
+    {
+        $config = (new CoreConfigService())->getConfigValue(0, ConfigKeyDict::TOUTIAO);
+
+        $client = new Client();
+        $response = $client->post('https://open.microapp.bytedance.com/openapi/v1/auth/retrieve', [
+            'query' => [
+                'component_appid' => $config['app_id'] ?? '',
+                'component_access_token' => $componentAccessToken,
+                'authorization_appid' => $authorizationAppid,
+            ],
+        ]);
+
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
+    /**
+     * 根据授权码换取 authorizer_access_token
+     * @param string $authorizationCode 授权码
+     * @param string $componentAccessToken 第三方平台接口凭据
+     * @return array
+     */
+    public function getAuthorizerAccessToken(string $authorizationCode, string $componentAccessToken): array
+    {
+        $config = (new CoreConfigService())->getConfigValue(0, ConfigKeyDict::TOUTIAO);
+
+        $client = new Client();
+        $response = $client->get('https://open.microapp.bytedance.com/openapi/v1/oauth/token', [
+            'query' => [
+                'component_appid' => $config['app_id'] ?? '',
+                'component_access_token' => $componentAccessToken,
+                'authorization_code' => $authorizationCode,
+                'grant_type' => 'app_to_tp_authorization_code',
+            ],
+        ]);
+
+        return json_decode($response->getBody()->getContents(), true);
+    }
 
 
 
@@ -82,5 +126,44 @@ class CoreToutiaoOpenService extends BaseCoreService
         file_put_contents($filepath, $response->getBody()->getContents());
 
         return $filepath;
+    }
+
+
+        /**
+     * 获取已授权小程序的二维码
+     * @param string $version 指定版本 latest、audit、current
+     * @param string $path 页面路径参数
+     * @return string 二维码图片路径
+     */
+    public function getToutiaoQrcode(string $version = 'latest', string $path = ''): string
+    {
+        $component = $this->getComponentAccessToken();
+        $componentAccessToken = $component['component_access_token'] ?? '';
+        if ($componentAccessToken === '') {
+            return '';
+        }
+
+        $config = (new CoreConfigService())->getConfigValue(0, ConfigKeyDict::TOUTIAO_WANDU);
+        $authorizationAppid = $config['authorization_appid'] ?? ($config['app_id'] ?? '');
+        if ($authorizationAppid === '') {
+            return '';
+        }
+
+        $codeRes = $this->retrieveAuthCode($authorizationAppid, $componentAccessToken);
+        $authorizationCode = $codeRes['authorization_code'] ?? '';
+        if ($authorizationCode === '') {
+            return '';
+        }
+
+        $tokenRes = $this->getAuthorizerAccessToken($authorizationCode, $componentAccessToken);
+        $authorizerAccessToken = $tokenRes['authorizer_access_token'] ?? '';
+        if ($authorizerAccessToken === '') {
+            return '';
+        }
+
+        $params = ['version' => $version];
+        if ($path !== '') $params['path'] = $path;
+
+        return $this->getQrcode($params, $authorizerAccessToken);
     }
 }

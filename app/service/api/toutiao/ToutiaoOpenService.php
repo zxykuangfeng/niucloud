@@ -41,4 +41,17 @@ class ToutiaoOpenService extends BaseApiService
     {
         return $this->core_service->getQrcode($params, $authorizerAccessToken);
     }
+
+
+    
+    /**
+     * 获取已授权抖音小程序二维码
+     * @param string $version
+     * @param string $path
+     * @return string
+     */
+    public function getToutiaoQrcode(string $version = 'latest', string $path = ''): string
+    {
+        return $this->core_service->getToutiaoQrcode($version, $path);
+    }
 }
