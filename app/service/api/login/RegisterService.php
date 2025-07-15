@@ -194,9 +194,10 @@ class RegisterService extends BaseApiService
 
         $with_field = match ( $type ) {
             MemberLoginTypeDict::USERNAME => 'username',
-            MemberLoginTypeDict::MOBILE => 'mobile',
-            MemberLoginTypeDict::WECHAT => 'wx_openid',
-            MemberLoginTypeDict::WEAPP => 'weapp_openid',
+            MemberLoginTypeDict::MOBILE   => 'mobile',
+            MemberLoginTypeDict::WECHAT   => 'wx_openid',
+            MemberLoginTypeDict::WEAPP    => 'weapp_openid',
+            MemberLoginTypeDict::DOUYIN   => 'douyin_openid',
         };
         if ($type == MemberLoginTypeDict::MOBILE || $type == MemberLoginTypeDict::WEAPP || $is_bind_mobile == 1) {
             //增加判断，否则公众号第三方注册会提示手机号必须填写
