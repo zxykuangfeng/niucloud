@@ -15,9 +15,8 @@ class Open extends BaseApiController
     {
         $params = $this->request->params([
             ['link_type', 1],
-            ['app_name', ''],
-            ['app_icon', ''],
-            ['redirect_uri', ''],
+            ['link_type', 1],
+            
         ]);
         $service = new ToutiaoOpenService();
         return success($service->getAuthLink($params));
@@ -36,10 +35,28 @@ class Open extends BaseApiController
             ['version', 'latest'],
             ['path', ''],
         ]);
-        $accessToken = $params['authorizer_access_token'];
+  
+        $accessToken = $params['authorizer_access_token'];    
+        // dd($accessToken);
         unset($params['authorizer_access_token']);
         $service = new ToutiaoOpenService();
         $file = $service->getQrcode($accessToken, $params);
+        return success(['path' => $file]);
+    }
+    
+    
+    /**
+     * 获取已授权抖音小程序二维码
+     * @return Response
+     */
+    public function getToutiaoQrcode(): Response
+    {
+        $params = $this->request->params([
+            ['version', 'latest'],
+            ['path', ''],
+        ]);
+        $service = new ToutiaoOpenService();
+        $file = $service->getToutiaoQrcode($params['version'], $params['path']);
         return success(['path' => $file]);
     }
 }

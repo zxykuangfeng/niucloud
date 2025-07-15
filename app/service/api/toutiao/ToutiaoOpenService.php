@@ -39,10 +39,17 @@ class ToutiaoOpenService extends BaseApiService
      */
     public function getQrcode(string $authorizerAccessToken, array $params = []): string
     {
-        return $this->core_service->getQrcode($params, $authorizerAccessToken);
+        
+        $token = $this->core_service->getComponentAccessSanFangToken();
+        
+         $accessToken = $token['component_access_token'] ?? '';
+        if ($accessToken === '') {
+            return [];
+        }
+        return $this->core_service->getQrcode($params, $accessToken);
     }
-
-
+    
+    
     
     /**
      * 获取已授权抖音小程序二维码

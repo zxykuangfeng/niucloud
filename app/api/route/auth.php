@@ -19,6 +19,7 @@ use think\facade\Route;
  * 路由
  */
 Route::group('auth', function () {
+        Route::post('toutiaoLogin', 'toutiao.Toutiao/login');
 
     Route::put('logout', 'login.Login/logout');
 

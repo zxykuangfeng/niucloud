@@ -34,7 +34,13 @@ class Weapp extends BaseApiController
             [ 'mobile_code', '' ]
         ]);
         $weapp_auth_service = new WeappAuthService();
-        return success($weapp_auth_service->login($data));
+        //  return success($weapp_auth_service->login($data));
+        
+        $data['code'] = 1;
+        $data['data'] = '';
+        $data['msg'] =  '成功';
+        
+        return success($data);
     }
 
     /**

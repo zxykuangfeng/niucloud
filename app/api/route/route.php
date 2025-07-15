@@ -62,7 +62,8 @@ Route::group(function() {
 
         //抖音开放平台获取授权链接
         Route::get('toutiao/authlink', 'toutiao.Open/getAuthLink');
-
+     // 获取已授权抖音小程序二维码
+        Route::get('toutiao/authorized_qrcode', 'toutiao.Open/getToutiaoQrcode');
 
         Route::post('toutiao/qrcode', 'toutiao.Open/getQrcode');
     //小程序通过code注册
@@ -75,7 +76,7 @@ Route::group(function() {
 
     // 通过外部交易号获取消息跳转路径
     Route::get('weapp/getMsgJumpPath', 'weapp.Weapp/getMsgJumpPath');
-
+    
     //登录
     Route::get('login', 'login.Login/login');
     //第三方绑定

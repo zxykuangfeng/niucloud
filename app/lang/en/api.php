@@ -114,6 +114,7 @@ return [
     'WECHAT_NOT_EXIST' => '微信公众号未配置完善',
     'KEYWORDS_NOT_EXIST' => '关键词回复不存在',
     'WECHAT_EMPOWER_NOT_EXIST' => '微信授信信息不存在',
+     'TOUTIAO_EMPOWER_NOT_EXIST' => 'Douyin authorization info not found',
     //小程序
     'WEAPP_NOT_EXIST' => '微信小程序未配置完善',
 

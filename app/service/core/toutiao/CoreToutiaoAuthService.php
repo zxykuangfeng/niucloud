@@ -10,15 +10,32 @@ class CoreToutiaoAuthService extends BaseCoreService
     public function session(int $site_id, ?string $code)
     {
         $config = (new CoreToutiaoConfigService())->getToutiaoConfig($site_id);
+        
+        
+        
+        //   dd($config);
+        //  die;
+        $config['app_id'] = 'tt554123fcca4821c001';
+          $config['app_secret'] = '0c8084ca6752ce2082d8fc375769afbd43d32226';
+        
         $client = new Client();
-        $response = $client->post('https://open.douyin.com/api/apps/v2/jscode2session', [
-            'json' => [
-                'appid' => $config['app_id'] ?? '',
-                'secret' => $config['app_secret'] ?? '',
-                'code' => (string)$code
-            ]
-        ]);
-        return json_decode($response->getBody()->getContents(), true);
+      $response = $client->post('https://open-sandbox.douyin.com/api/apps/v2/jscode2session', [
+    'json' => [
+        'appid' => $config['app_id'] ?? '',
+        'secret' => $config['app_secret'] ?? '',
+        'code' => (string)$code
+    ]
+]);
+
+$body = $response->getBody()->getContents();
+//   dd(json_decode($body, true)['data']);
+// dd([
+//     '原始内容' => $body,
+//     '解析后' => json_decode($body, true),
+//     'Content-Type' => $response->getHeaderLine('Content-Type')
+// ]);
+//           dd(json_decode($response->getBody()->getContents(), true));
+         return json_decode($body, true)['data'];
     }
 
     public function getUserPhoneNumber(int $site_id, string $code)

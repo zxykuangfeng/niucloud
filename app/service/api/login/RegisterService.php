@@ -51,10 +51,13 @@ class RegisterService extends BaseApiService
      */
     public function register(string $mobile, $data, string $type, bool $is_verify_mobile = true)
     {
+       
         //校验注册方式
         if (empty(MemberRegisterTypeDict::getType()[ $type ]))
-            throw new AuthException('REG_CHANNEL_NOT_EXIST');
-        $data = $this->bindByMobile($mobile, $data, $type, $is_verify_mobile);
+            throw new AuthException('REG_CHANNEL_NOT_EXIST');  
+        $data = $this->bindByMobile($mobile, $data, $type, $is_verify_mobile); 
+        
+      
         $member_service = new MemberService();
         if (!is_array($data)) {
             $member_id = $data;
@@ -185,6 +188,7 @@ class RegisterService extends BaseApiService
      */
     public function bindByMobile($mobile, array $data, string $type, bool $is_verify = true)
     {
+        //   dd($type);
         $config = ( new MemberConfigService() )->getLoginConfig();
         $is_bind_mobile = $config[ 'is_bind_mobile' ];
 

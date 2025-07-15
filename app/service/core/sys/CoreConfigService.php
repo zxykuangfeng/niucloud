@@ -44,11 +44,18 @@ class CoreConfigService extends BaseCoreService
             [ 'config_key', '=', $key ],
             [ 'site_id', '=', $site_id ]
         );
+        
+        //   dd($where);
+        cache()->delete('site_config_cache' . $key . "_" . $site_id);
         // 缓存清理
         $info = cache_remember(
             $cache_name . $key . "_" . $site_id,
             function() use ($where) {
+                
+               
                 $data = $this->model->where($where)->field('id,site_id,config_key,value,status,create_time,update_time')->findOrEmpty()->toArray();
+                //   dd($data);
+                
                 //数据库中无数据返回-1
                 if (empty($data)) {
                     return -1;
@@ -57,6 +64,8 @@ class CoreConfigService extends BaseCoreService
             },
             self::$cache_tag_name . $site_id
         );
+        
+        //  dd($info);
         // 检测缓存-1 返回空数据
         if ($info == -1) {
             return [];

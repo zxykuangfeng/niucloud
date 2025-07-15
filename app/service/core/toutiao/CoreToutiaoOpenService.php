@@ -17,8 +17,8 @@ class CoreToutiaoOpenService extends BaseCoreService
      */
     public function getComponentAccessToken(): array
     {
-        $config = (new CoreConfigService())->getConfigValue(0, ConfigKeyDict::TOUTIAO);
-        $ticket = (new CoreConfigService())->getConfigValue(0, ConfigKeyDict::TOUTIAO_TICKET);
+        $config = (new CoreConfigService())->getConfigValue(100001, ConfigKeyDict::TOUTIAO);
+        $ticket = (new CoreConfigService())->getConfigValue(100001, ConfigKeyDict::TOUTIAO_TICKET);
 
         $client = new Client();
         $response = $client->get('https://open.microapp.bytedance.com/openapi/v1/auth/tp/token', [
@@ -28,9 +28,28 @@ class CoreToutiaoOpenService extends BaseCoreService
                 'component_ticket' => $ticket['ticket'] ?? '',
             ],
         ]);
-
+        // dd($config['app_id']);
         return json_decode($response->getBody()->getContents(), true);
     }
+    
+    
+    // authorizer_access_token
+    //     public function getAuthorizerAccessToken(): array
+    // {
+    //     $config = (new CoreConfigService())->getConfigValue(100001, 'toutiao');
+    //     $ticket = (new CoreConfigService())->getConfigValue(100001, ConfigKeyDict::TOUTIAO_TICKET);
+    //     $client = new Client();
+    //     $response = $client->get('https://open.microapp.bytedance.com/openapi/v1/oauth/token', [ 
+    //         // https://open.microapp.bytedance.com/openapi/v1/oauth/token
+    //         'query' => [
+    //             'component_appid' => $config['app_id'] ?? '',
+    //             'component_appsecret' => $config['app_secret'] ?? '',
+    //             'grant_type' => 'app_to_tp_authorization_code',
+    //         ],
+    //     ]);
+    //     dd(json_decode($response->getBody()->getContents(), true));
+    //     return json_decode($response->getBody()->getContents(), true);
+    // }
 
     /**
      * 直接获取授权链接
@@ -40,7 +59,7 @@ class CoreToutiaoOpenService extends BaseCoreService
      */
     public function genAuthLink(array $params, string $componentAccessToken): array
     {
-        $config = (new CoreConfigService())->getConfigValue(0, ConfigKeyDict::TOUTIAO);
+        $config = (new CoreConfigService())->getConfigValue(100001, ConfigKeyDict::TOUTIAO);
 
         $client = new Client();
         $response = $client->post('https://open.microapp.bytedance.com/openapi/v2/auth/gen_link', [
@@ -54,7 +73,7 @@ class CoreToutiaoOpenService extends BaseCoreService
         return json_decode($response->getBody()->getContents(), true);
     }
 
- /**
+  /**
      * 通过授权 appid 取回最新的授权码
      * @param string $authorizationAppid 授权小程序 appid
      * @param string $componentAccessToken 第三方平台接口凭据
@@ -62,7 +81,7 @@ class CoreToutiaoOpenService extends BaseCoreService
      */
     public function retrieveAuthCode(string $authorizationAppid, string $componentAccessToken): array
     {
-        $config = (new CoreConfigService())->getConfigValue(0, ConfigKeyDict::TOUTIAO);
+        $config = (new CoreConfigService())->getConfigValue(100001, ConfigKeyDict::TOUTIAO);
 
         $client = new Client();
         $response = $client->post('https://open.microapp.bytedance.com/openapi/v1/auth/retrieve', [
@@ -76,15 +95,16 @@ class CoreToutiaoOpenService extends BaseCoreService
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    /**
-     * 根据授权码换取 authorizer_access_token
-     * @param string $authorizationCode 授权码
-     * @param string $componentAccessToken 第三方平台接口凭据
-     * @return array
-     */
+    // /**
+    //  * 根据授权码换取 authorizer_access_token
+    //  * @param string $authorizationCode 授权码
+    //  * @param string $componentAccessToken 第三方平台接口凭据
+    //  * @return array
+    //  */
     public function getAuthorizerAccessToken(string $authorizationCode, string $componentAccessToken): array
     {
-        $config = (new CoreConfigService())->getConfigValue(0, ConfigKeyDict::TOUTIAO);
+        // dd(111);
+        $config = (new CoreConfigService())->getConfigValue(100001, ConfigKeyDict::TOUTIAO);
 
         $client = new Client();
         $response = $client->get('https://open.microapp.bytedance.com/openapi/v1/oauth/token', [
@@ -95,10 +115,9 @@ class CoreToutiaoOpenService extends BaseCoreService
                 'grant_type' => 'app_to_tp_authorization_code',
             ],
         ]);
-
+        // dd($config);
         return json_decode($response->getBody()->getContents(), true);
     }
-
 
 
     /**
@@ -107,29 +126,44 @@ class CoreToutiaoOpenService extends BaseCoreService
      * @param string $authorizerAccessToken 授权小程序接口调用凭据
      * @return string 二维码图片路径
      */
-    public function getQrcode(array $params, string $authorizerAccessToken): string
-    {
-        $config = (new CoreConfigService())->getConfigValue(0, ConfigKeyDict::TOUTIAO);
+public function getQrcode(array $params, string $authorizerAccessToken): string
+{
+    $config = (new CoreConfigService())->getConfigValue(100001, ConfigKeyDict::TOUTIAO);
 
-        $client = new Client();
-        $response = $client->post('https://open.microapp.bytedance.com/openapi/v1/microapp/app/qrcode', [
-            'query' => [
-                'component_appid' => $config['app_id'] ?? '',
-                'authorizer_access_token' => $authorizerAccessToken,
-            ],
-            'json' => $params,
-        ]);
+    $client = new Client();
+    $response = $client->post('https://open.microapp.bytedance.com/openapi/v1/microapp/app/qrcode', [
+        'query' => [
+            'component_appid' => $config['app_id'] ?? '',
+            'authorizer_access_token' => $authorizerAccessToken,
+        ],
+        'json' => $params,
+    ]);
 
-        $dir = public_path() . 'qrcode/0/';
-        mkdirs_or_notexist($dir);
-        $filepath = $dir . time() . '.png';
-        file_put_contents($filepath, $response->getBody()->getContents());
-
-        return $filepath;
+    $contentType = $response->getHeaderLine('Content-Type');
+    $body = $response->getBody()->getContents();
+    // dd($response);
+    // 判断是否是 JSON（错误信息）或图片
+    if (str_contains($contentType, 'application/json')) {
+        $json = json_decode($body, true);
+        // 打印错误信息或记录日志
+        
+        
+        // throw new \Exception('获取二维码失败：' . json_encode($json, JSON_UNESCAPED_UNICODE));
     }
 
+    $dir = public_path('qrcode/0/');
+    if (!is_dir($dir)) {
+        mkdir($dir, 0777, true);
+    }
 
-        /**
+    $filepath = $dir . time() . '.png';
+    file_put_contents($filepath, $body);
+
+    return $filepath;
+}
+
+
+   /**
      * 获取已授权小程序的二维码
      * @param string $version 指定版本 latest、audit、current
      * @param string $path 页面路径参数
@@ -142,20 +176,23 @@ class CoreToutiaoOpenService extends BaseCoreService
         if ($componentAccessToken === '') {
             return '';
         }
-
-        $config = (new CoreConfigService())->getConfigValue(0, ConfigKeyDict::TOUTIAO_WANDU);
+        
+       
+        $config = (new CoreConfigService())->getConfigValue(100001, ConfigKeyDict::TOUTIAO_WANDU);
         $authorizationAppid = $config['authorization_appid'] ?? ($config['app_id'] ?? '');
         if ($authorizationAppid === '') {
             return '';
         }
-
+ 
         $codeRes = $this->retrieveAuthCode($authorizationAppid, $componentAccessToken);
+    //   dd($codeRes);
         $authorizationCode = $codeRes['authorization_code'] ?? '';
         if ($authorizationCode === '') {
             return '';
         }
 
         $tokenRes = $this->getAuthorizerAccessToken($authorizationCode, $componentAccessToken);
+        // dd($tokenRes);
         $authorizerAccessToken = $tokenRes['authorizer_access_token'] ?? '';
         if ($authorizerAccessToken === '') {
             return '';

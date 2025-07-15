@@ -214,6 +214,7 @@ return [
     'WECHAT_NOT_EXIST' => '微信公众号未配置完善',
     'KEYWORDS_NOT_EXIST' => '关键词回复不存在',
     'WECHAT_EMPOWER_NOT_EXIST' => '微信授权信息不存在',
+     'TOUTIAO_EMPOWER_NOT_EXIST' => '抖音授权信息不存在',
     'SCAN_SUCCESS' => '扫码成功',
     'WECHAT_SNAPSHOUTUSER' => '返回的是虚拟账号',
     //小程序

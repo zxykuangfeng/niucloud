@@ -32,7 +32,21 @@ class Toutiao extends BaseApiController
             [ 'mobile_code', '' ]
         ]);
         $toutiao_auth_service = new ToutiaoAuthService();
-        return success($toutiao_auth_service->login($data));
+        
+        
+        $userInfo = $toutiao_auth_service->login($data); // ✅ 正确
+        dd($userInfo);
+        $openid = $userInfo['openid'] ?? '';
+        $unionid = $userInfo['unionid'] ?? '';
+        return [
+            'code' => 1,
+            'msg'  => '登录成功',
+            'data' => [
+                'openid' => $openid,
+                'unionid' => $unionid,
+            ]
+        ];    
+        
     }
 
     /**

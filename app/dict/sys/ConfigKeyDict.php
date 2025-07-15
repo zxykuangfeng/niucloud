@@ -19,7 +19,7 @@ class ConfigKeyDict
     public const WEAPP = 'weapp';//微信小程序
     //抖音小程序
     public const TOUTIAO = 'toutiao';
-     // 已授权抖音小程序 appid
+      // 已授权抖音小程序 appid
     public const TOUTIAO_WANDU = 'toutiao_wandu';
     
     public const WECHAT_PAY = 'wechat_pay';//微信支付

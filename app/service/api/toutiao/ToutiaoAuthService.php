@@ -43,34 +43,30 @@ class ToutiaoAuthService extends BaseApiService
         $this->core_toutiao_serve_service = new CoreToutiaoAuthService();
     }
 
-    /**
-     * 通过code获取抖音小程序用户信息
-     * @param string $code
-     * @return array
-     * @throws InvalidConfigException
-     */
-    public function getUserInfoByCode(string $code)
-    {
-//        $iv = $this->request->param('iv', '');
-//        $encrypted_data = $this->request->param('encrypted_data', '');
-        $result = $this->core_toutiao_serve_service->session($this->site_id, $code);
-//        if(empty($result)) throw new ApiException('WECHAT_EMPOWER_NOT_EXIST');
-//        $userinfo = $this->core_toutiao_serve_service->decryptData($result['session_key'], $iv, $encrypted_data);
-        $openid = $result[ 'openid' ] ?? '';//对应抖音的 openid
-        $unionid = $result[ 'unionid' ] ?? '';//对应抖音的 unionid
-        if (empty($openid)) throw new ApiException('WECHAT_EMPOWER_NOT_EXIST');
-        //todo 这儿还可能会获取用户昵称 头像  性别 ....用以更新会员信息
-//        $nickname = $userinfo['nickName'] ?? '';//对应微信的 nickname
-//        $avatar = $userinfo['avatarUrl'] ?? '';//对应微信的 头像地址
-//        $sex = $userinfo['gender'];//性别
-        return [
-            $openid,
-            $unionid,
-//            $avatar,
-//            $nickname,
-//            $sex
-        ];
+  /**
+ * 通过 code 获取抖音小程序用户 openid 和 unionid
+ *
+ * @param string $code
+ * @return array
+ * @throws \Exception
+ */
+public function getUserInfoByCode(string $code): array
+{
+    // 获取 session 信息（含 openid 和 session_key 等）
+    $result = $this->core_toutiao_serve_service->session($this->site_id, $code);
+
+    // 这里你也可以加异常处理
+    if (empty($result) || !isset($result['openid'])) {
+        throw new \Exception('获取抖音 openid 失败');
     }
+
+    // 提取 openid 和 unionid（如果有）
+    $openid = $result['openid'] ?? '';
+    $unionid = $result['unionid'] ?? '';
+    // dd($unionid);
+   return [ 'openid' => $openid, 'unionid' => $unionid ]; // 将重要信息返回给前端保存
+
+}
 
     /**
      * 登录
@@ -86,14 +82,10 @@ class ToutiaoAuthService extends BaseApiService
     public function login($data)
     {
 
-        [
-            $openid,
-            $unionid,
-//            $avatar,
-//            $nickname,
-//            $sex
-        ] = $this->getUserInfoByCode($data[ 'code' ]);
-
+      $user_info = $this->getUserInfoByCode($data['code']);
+        $openid = $user_info['openid'] ?? '';
+        $unionid = $user_info['unionid'] ?? '';
+        // dd($openid);
         $member_service = new MemberService();
         $member_info = $member_service->findMemberInfo([ 'douyin_openid' => $openid, 'site_id' => $this->site_id ]);
         if ($member_info->isEmpty() && !empty($unionid)) {
@@ -102,7 +94,7 @@ class ToutiaoAuthService extends BaseApiService
                 $member_info->douyin_openid = $openid;
             }
         }
-
+        // dd($member_info);
         $config = ( new MemberConfigService() )->getLoginConfig();
         $is_auth_register = $config[ 'is_auth_register' ];
         $is_force_access_user_info = $config[ 'is_force_access_user_info' ];
@@ -110,10 +102,10 @@ class ToutiaoAuthService extends BaseApiService
         $is_mobile = $config[ 'is_mobile' ];
 
         if ($member_info->isEmpty()) {
-
+        // 
             // 开启自动注册会员
             if ($is_auth_register) {
-
+//  dd(222);
                 // 开启强制获取会员信息并且开启强制绑定手机号，必须获取全部信息才能进行注册
                 if ($is_force_access_user_info && $is_bind_mobile) {
                     if (!empty($data[ 'nickname' ]) && !empty($data[ 'headimg' ]) && !empty($data[ 'mobile' ])) {
@@ -218,7 +210,7 @@ class ToutiaoAuthService extends BaseApiService
             $member_info = $member_service->findMemberInfo([ 'wx_unionid' => $wx_unionid, 'site_id' => $this->site_id ]);
             if (!$member_info->isEmpty()) throw new AuthException('MEMBER_IS_EXIST');//账号已存在, 不能在注册
         }
-
+        // dd(1111);
         $register_service = new RegisterService();
         return $register_service->register($mobile ?? '',
             [

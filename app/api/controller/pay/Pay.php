@@ -56,6 +56,9 @@ class Pay extends BaseApiController
 
     public function info($trade_type, $trade_id)
     {
+        
+        // var_dump(222);
+        // die;
         $data = $this->request->params([
             ['scene', '']
         ]);
