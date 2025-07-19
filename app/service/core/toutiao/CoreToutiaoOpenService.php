@@ -203,4 +203,69 @@ public function getQrcode(array $params, string $authorizerAccessToken): string
 
         return $this->getQrcode($params, $authorizerAccessToken);
     }
+    
+    
+      /**
+     * 提审已授权抖音小程序
+     * @param array $hostNames 需要审核的宿主端
+     * @param string $auditNote 提审备注
+     * @param int $auditWay 是否使用上次失败版本重新提审
+     * @return array
+     */
+    public function auditToutiaoPackage(array $hostNames, string $auditNote = '', int $auditWay = 0): array
+    {
+        $component = $this->getComponentAccessToken();
+        $componentAccessToken = $component['component_access_token'] ?? '';
+        if ($componentAccessToken === '') {
+            return [];
+        }
+
+        $config = (new CoreConfigService())->getConfigValue(100001, ConfigKeyDict::TOUTIAO_WANDU);
+        $authorizationAppid = $config['authorization_appid'] ?? ($config['app_id'] ?? '');
+        if ($authorizationAppid === '') {
+            return [];
+        }
+
+        $codeRes = $this->retrieveAuthCode($authorizationAppid, $componentAccessToken);
+        $authorizationCode = $codeRes['authorization_code'] ?? '';
+        if ($authorizationCode === '') {
+            return [];
+        }
+
+        $tokenRes = $this->getAuthorizerAccessToken($authorizationCode, $componentAccessToken);
+        $authorizerAccessToken = $tokenRes['authorizer_access_token'] ?? '';
+        if ($authorizerAccessToken === '') {
+            return [];
+        }
+
+        $params = [
+            'hostNames' => $hostNames,
+        ];
+        if ($auditNote !== '') $params['auditNote'] = $auditNote;
+        if ($auditWay !== 0) $params['auditWay'] = $auditWay;
+
+        return $this->auditPackage($params, $authorizerAccessToken);
+    }
+
+    /**
+     * 调用抖音提审接口
+     * @param array $params 请求参数
+     * @param string $authorizerAccessToken 授权小程序接口调用凭据
+     * @return array
+     */
+    public function auditPackage(array $params, string $authorizerAccessToken): array
+    {
+        $config = (new CoreConfigService())->getConfigValue(100001, ConfigKeyDict::TOUTIAO);
+
+        $client = new Client();
+        $response = $client->post('https://open.microapp.bytedance.com/openapi/v2/microapp/package/audit', [
+            'query' => [
+                'component_appid' => $config['app_id'] ?? '',
+                'authorizer_access_token' => $authorizerAccessToken,
+            ],
+            'json' => $params,
+        ]);
+
+        return json_decode($response->getBody()->getContents(), true);
+    }
 }

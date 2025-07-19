@@ -64,7 +64,8 @@ Route::group(function() {
         Route::get('toutiao/authlink', 'toutiao.Open/getAuthLink');
      // 获取已授权抖音小程序二维码
         Route::get('toutiao/authorized_qrcode', 'toutiao.Open/getToutiaoQrcode');
-
+                // 提审已授权抖音小程序
+        Route::post('toutiao/authorized_audit', 'toutiao.Open/auditToutiaoPackage');
         Route::post('toutiao/qrcode', 'toutiao.Open/getQrcode');
     //小程序通过code注册
     Route::post('weapp/register', 'weapp.Weapp/register');

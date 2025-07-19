@@ -290,6 +290,15 @@ class CorePayEventService extends BaseCoreService
         return $this->app()->getTransfer($transfer_no, $batch_id);
     }
 
+        /**
+     * 获取抖音 tt.requestOrder 参数
+     * @param array $params
+     * @return array
+     */
+    public function getRequestOrderParams(array $params)
+    {
+        return $this->app('pay')->getRequestOrderParams($params);
+    }
 
     /**
      * 取消订单

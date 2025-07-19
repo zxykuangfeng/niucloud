@@ -33,6 +33,8 @@ Route::group('pay',function () {
 Route::group('pay',function () {
     //去支付
     Route::post('', 'pay.Pay/pay');
+     //抖音支付参数
+    Route::post('douyin/params', 'pay.Pay/douyinParams');
     //支付信息
     Route::get('info/:trade_type/:trade_id', 'pay.Pay/info');
     //获取支付类型

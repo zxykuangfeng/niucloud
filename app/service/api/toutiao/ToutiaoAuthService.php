@@ -52,6 +52,7 @@ class ToutiaoAuthService extends BaseApiService
  */
 public function getUserInfoByCode(string $code): array
 {
+    // dd($this->site_id);
     // 获取 session 信息（含 openid 和 session_key 等）
     $result = $this->core_toutiao_serve_service->session($this->site_id, $code);
 
@@ -83,6 +84,7 @@ public function getUserInfoByCode(string $code): array
     {
 
       $user_info = $this->getUserInfoByCode($data['code']);
+    //   dd($user_info);
         $openid = $user_info['openid'] ?? '';
         $unionid = $user_info['unionid'] ?? '';
         // dd($openid);
@@ -100,14 +102,15 @@ public function getUserInfoByCode(string $code): array
         $is_force_access_user_info = $config[ 'is_force_access_user_info' ];
         $is_bind_mobile = $config[ 'is_bind_mobile' ];
         $is_mobile = $config[ 'is_mobile' ];
-
+        // dd($member_info);
         if ($member_info->isEmpty()) {
-        // 
+        
             // 开启自动注册会员
             if ($is_auth_register) {
-//  dd(222);
+//   dd(222);
                 // 开启强制获取会员信息并且开启强制绑定手机号，必须获取全部信息才能进行注册
                 if ($is_force_access_user_info && $is_bind_mobile) {
+                    // dd(22211);
                     if (!empty($data[ 'nickname' ]) && !empty($data[ 'headimg' ]) && !empty($data[ 'mobile' ])) {
                         return $this->register($openid, $data[ 'mobile' ], $data[ 'mobile_code' ], $unionid, $data[ 'nickname' ], $data[ 'headimg' ]);
                     } else {
@@ -167,6 +170,7 @@ public function getUserInfoByCode(string $code): array
 //                    }
                 }
             }
+            // dd(111);
             return $login_service->login($member_info, MemberLoginTypeDict::DOUYIN);
         }
     }
@@ -188,7 +192,7 @@ public function getUserInfoByCode(string $code): array
      */
     public function register(string $openid, string $mobile = '', string $mobile_code = '', string $wx_unionid = '', $nickname = '', $headimg = '')
     {
-
+// dd($openid);
         if (empty($openid)) throw new AuthException('AUTH_LOGIN_TAG_NOT_EXIST');
         if (empty($mobile)) {
             if (!empty($mobile_code)) {
@@ -210,7 +214,7 @@ public function getUserInfoByCode(string $code): array
             $member_info = $member_service->findMemberInfo([ 'wx_unionid' => $wx_unionid, 'site_id' => $this->site_id ]);
             if (!$member_info->isEmpty()) throw new AuthException('MEMBER_IS_EXIST');//账号已存在, 不能在注册
         }
-        // dd(1111);
+        //  dd($openid);
         $register_service = new RegisterService();
         return $register_service->register($mobile ?? '',
             [

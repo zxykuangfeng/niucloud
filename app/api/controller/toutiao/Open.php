@@ -30,6 +30,8 @@ class Open extends BaseApiController
      */
     public function getQrcode(): Response
     {
+        
+        // dd(2222);
         $params = $this->request->params([
             ['authorizer_access_token', ''],
             ['version', 'latest'],
@@ -51,6 +53,8 @@ class Open extends BaseApiController
      */
     public function getToutiaoQrcode(): Response
     {
+        
+        // dd(3333);
         $params = $this->request->params([
             ['version', 'latest'],
             ['path', ''],
@@ -58,5 +62,21 @@ class Open extends BaseApiController
         $service = new ToutiaoOpenService();
         $file = $service->getToutiaoQrcode($params['version'], $params['path']);
         return success(['path' => $file]);
+    }
+    
+     /**
+     * 提审已授权抖音小程序
+     * @return Response
+     */
+    public function auditToutiaoPackage(): Response
+    {
+        $params = $this->request->params([
+            ['host_names', []],
+            ['audit_note', ''],
+            ['audit_way', 0],
+        ]);
+        $service = new ToutiaoOpenService();
+        $res = $service->auditToutiaoPackage($params['host_names'], $params['audit_note'], $params['audit_way']);
+        return success($res);
     }
 }

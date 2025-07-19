@@ -52,8 +52,9 @@ class PayService extends BaseApiService
      * @throws ModelNotFoundException
      */
     public function pay(string $type, string $trade_type, int $trade_id, string $return_url = '', string $quit_url = '', string $buyer_id = '', string $voucher = '', string $openid = ''){
-
+        
         $member = (new CoreMemberService())->getInfoByMemberId($this->site_id, $this->member_id);
+        // dd($member);
         switch ($this->channel) {
             case ChannelDict::WECHAT://公众号
                 $openid = $openid ? $openid : $member['wx_openid'] ?? '';
@@ -61,11 +62,37 @@ class PayService extends BaseApiService
             case ChannelDict::WEAPP://微信小程序
                 $openid = $openid ? $openid : $member['weapp_openid'] ?? '';
                 break;
+            case ChannelDict::DOUYIN://抖音小程序
+                $openid = $openid ? $openid : $member['douyin_openid'] ?? '';
+                break;    
         }
 
         return $this->core_pay_service->pay($this->site_id, $trade_type, $trade_id, $type, $this->channel, $openid, $return_url, $quit_url, $buyer_id, $voucher, $this->member_id);
     }
-
+  /**
+     * 获取抖音 tt.requestOrder 参数
+     * @param string $trade_type
+     * @param int $trade_id
+     * @param string $return_url
+     * @param string $quit_url
+     * @param string $buyer_id
+     * @param string $voucher
+     * @param string $openid
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function douyinParams(string $trade_type, int $trade_id, string $return_url = '', string $quit_url = '', string $buyer_id = '', string $voucher = '', string $openid = '')
+    {
+        $member = (new CoreMemberService())->getInfoByMemberId($this->site_id, $this->member_id);
+        if ($this->channel === ChannelDict::DOUYIN) {
+            $openid = $openid ? $openid : $member['douyin_openid'] ?? '';
+        }
+        
+        // dd($member);
+        return $this->core_pay_service->douyinRequestOrderParams($this->site_id, $trade_type, $trade_id, $this->channel, $openid, $return_url, $quit_url, $buyer_id, $voucher, $this->member_id);
+    }
     /**
      * 关闭支付
      * @param string $type

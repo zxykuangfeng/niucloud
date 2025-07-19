@@ -282,6 +282,66 @@ class CorePayService extends BaseCoreService
         }
         return $pay_result;
     }
+    
+    
+        /**
+     * 获取抖音 tt.requestOrder 参数
+     * @param int $site_id
+     * @param string $trade_type
+     * @param int $trade_id
+     * @param string $channel
+     * @param string $openid
+     * @param string $return_url
+     * @param string $quit_url
+     * @param string $buyer_id
+     * @param string $voucher
+     * @param int $member_id
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function douyinRequestOrderParams(int $site_id, string $trade_type, int $trade_id, string $channel, string $openid = '', string $return_url = '', string $quit_url = '', string $buyer_id = '', string $voucher = '', int $member_id = 0)
+    {
+        $type = PayDict::DOUYINPAY;
+        $pay = $this->checkOrCreate($site_id, $trade_type, $trade_id);
+        $out_trade_no = $pay['out_trade_no'];
+        $money = $pay['money'];
+        $body = $pay['body'];
+        $trade_type = $pay['trade_type'];
+
+        if (!in_array($type, array_column((new CorePayChannelService())->getAllowPayTypeByChannel($site_id, $channel, $trade_type), 'key')))
+            throw new PayException('PAYMENT_METHOD_NOT_SCENE');
+
+        if ($member_id != 0) {
+            $pay_info = $this->findPayInfoByTrade($site_id, $trade_type, $trade_id);
+            $pay_info->save(['main_id' => $member_id]);
+        }
+
+        $params = [
+            'out_trade_no' => $out_trade_no,
+            'money' => $money,
+            'body' => $body,
+            'return_url' => $return_url,
+            'quit_url' => $quit_url,
+            'buyer_id' => $buyer_id,
+            'openid' => $openid,
+            'voucher' => $voucher
+        ];
+        // dd($params);
+        $result = $this->pay_event->init($site_id, $channel, $type)->getRequestOrderParams($params);
+        // dd($result);
+        $pay->save([
+            'type' => $type,
+            'status' => PayDict::STATUS_ING,
+            'channel' => $channel
+        ]);
+        if (env('queue.state', true)) {
+            PayReturnTo::dispatch(['site_id' => $site_id, 'out_trade_no' => $out_trade_no], secs: 60);
+        }
+
+        return $result;
+    }
 
     /**
      * 检测支付单据  (如果不存在就创建,如果存在但支付中就尝试关闭)

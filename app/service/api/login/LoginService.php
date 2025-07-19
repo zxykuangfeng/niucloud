@@ -77,7 +77,9 @@ class LoginService extends BaseApiService
         return [
             'token' => $token_info[ 'token' ],
             'expires_time' => $token_info[ 'params' ][ 'exp' ],
-            'mobile' => $member_info->mobile
+            'mobile' => $member_info->mobile,
+            'member_id' => $member_info->member_id,
+            'openid' => $member_info->douyin_openid,
         ];
     }
 

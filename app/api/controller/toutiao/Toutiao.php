@@ -35,17 +35,15 @@ class Toutiao extends BaseApiController
         
         
         $userInfo = $toutiao_auth_service->login($data); // ✅ 正确
-        dd($userInfo);
+         
         $openid = $userInfo['openid'] ?? '';
-        $unionid = $userInfo['unionid'] ?? '';
-        return [
-            'code' => 1,
-            'msg'  => '登录成功',
-            'data' => [
-                'openid' => $openid,
-                'unionid' => $unionid,
-            ]
-        ];    
+        $member_id = $userInfo['member_id'] ?? ''; 
+        $token = $userInfo['token'] ?? ''; 
+        return success([
+        'openid'    => $userInfo['openid'] ?? '',
+        'memberid'  => $userInfo['member_id'] ?? '',
+        'token' => $userInfo['token'] ?? '', 
+    ]);   
         
     }
 

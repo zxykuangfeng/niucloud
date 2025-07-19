@@ -15,16 +15,19 @@ class CoreToutiaoAuthService extends BaseCoreService
         
         //   dd($config);
         //  die;
+        //目标小程序（万度）
         $config['app_id'] = 'tt554123fcca4821c001';
           $config['app_secret'] = '0c8084ca6752ce2082d8fc375769afbd43d32226';
-        
+        //现在的模板理发预约 
+        //      $config['app_id'] = 'ttb99ecf2326972f8a01';
+        //   $config['app_secret'] = '94ad32ae324a0776d1cb2bf2d10388f171926598';
         $client = new Client();
-      $response = $client->post('https://open-sandbox.douyin.com/api/apps/v2/jscode2session', [
-    'json' => [
-        'appid' => $config['app_id'] ?? '',
-        'secret' => $config['app_secret'] ?? '',
-        'code' => (string)$code
-    ]
+          $response = $client->post('https://open-sandbox.douyin.com/api/apps/v2/jscode2session', [
+        'json' => [
+            'appid' => $config['app_id'] ?? '',
+            'secret' => $config['app_secret'] ?? '',
+            'code' => (string)$code
+        ]
 ]);
 
 $body = $response->getBody()->getContents();

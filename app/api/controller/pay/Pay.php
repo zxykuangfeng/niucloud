@@ -39,7 +39,7 @@ class Pay extends BaseApiController
      */
     public function pay()
     {
-
+        // dd(333333333);
         $data = $this->request->params([
             ['type', ''],
             ['trade_type', ''],//业务类型
@@ -53,7 +53,27 @@ class Pay extends BaseApiController
 
         return success('SUCCESS',(new PayService())->pay($data['type'], $data['trade_type'], $data['trade_id'], $data['return_url'], $data['quit_url'], $data['buyer_id'], $data['voucher'], $data['openid']));
     }
+    
+        /**
+     * 获取抖音 tt.requestOrder 参数
+     * @return Response
+     */
+    public function douyinParams()
+    {
+        // dd(111);
+        $data = $this->request->params([
+            ['trade_type', ''],
+            ['trade_id', ''],
+            ['quit_url', ''],
+            ['buyer_id', ''],
+            ['return_url', ''],
+            ['voucher', ''],
+            ['openid', '']
+        ]);
 
+        return success((new PayService())->douyinParams($data['trade_type'], $data['trade_id'], $data['return_url'], $data['quit_url'], $data['buyer_id'], $data['voucher'], $data['openid']));
+    }
+    
     public function info($trade_type, $trade_id)
     {
         

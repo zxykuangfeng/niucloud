@@ -61,4 +61,16 @@ class ToutiaoOpenService extends BaseApiService
     {
         return $this->core_service->getToutiaoQrcode($version, $path);
     }
+    
+      /**
+     * 提审已授权抖音小程序
+     * @param array $hostNames
+     * @param string $auditNote
+     * @param int $auditWay
+     * @return array
+     */
+    public function auditToutiaoPackage(array $hostNames, string $auditNote = '', int $auditWay = 0): array
+    {
+        return $this->core_service->auditToutiaoPackage($hostNames, $auditNote, $auditWay);
+    }
 }
