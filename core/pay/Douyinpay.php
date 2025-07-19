@@ -95,6 +95,7 @@ class Douyinpay extends BasePay
      */
     private function createOrder(array $params)
     {
+        // dd($this->config);
         if (empty($this->config['app_id']) || empty($this->config['merchant_id']) || empty($this->config['secret_key'])) {
             throw new PayException('DOUYINPAY_CONFIG_ERROR');
         }
@@ -109,6 +110,7 @@ class Douyinpay extends BasePay
             'sign_type' => 'MD5',
             'valid_time' => $params['valid_time'] ?? 600,
             'notify_url' => $this->config['notify_url'] ?? '',
+            'body'=>'商品',
         ];
 
         if (!empty($params['openid'])) {
@@ -118,11 +120,13 @@ class Douyinpay extends BasePay
         $order['sign'] = $this->sign($order);
 
         $client = new Client();
-        $response = $client->post($this->config['gateway'] ?? 'https://open.douyin.com/api/apps/ecpay/v1/create_order', [
+        $response = $client->post("https://developer.toutiao.com/api/apps/ecpay/v1/create_order" ?? 'https://developer.toutiao.com/api/apps/ecpay/v1/create_order', [
             'json' => $order,
         ]);
+        $raw = $response->getBody()->getContents();
 
         $result = json_decode($response->getBody()->getContents(), true);
+        
         if (($result['err_no'] ?? 0) != 0) {
             throw new PayException($result['err_tips'] ?? 'douyin pay error');
         }
@@ -208,5 +212,70 @@ class Douyinpay extends BasePay
         }
 
         return false;
+    }
+    
+        /**
+     * 获取 tt.requestOrder 所需参数
+     * @param array $params
+     * @return array
+     * @throws PayException
+     */
+    public function getRequestOrderParams(array $params)
+    {
+        $data = $this->createOrder($params);
+        $dataStr = json_encode($data, JSON_UNESCAPED_UNICODE);
+        $timestamp = time();
+        $nonceStr = $this->randStr(10);
+        $keyVersion = $this->config['key_version'] ?? '1';
+        $byteAuthorization = $this->getByteAuthorization(
+            $this->config['secret_key'] ?? '',
+            $dataStr,
+            $this->config['app_id'] ?? '',
+            $nonceStr,
+            $timestamp,
+            $keyVersion
+        );
+        return [
+            'data' => $dataStr,
+            'byteAuthorization' => $byteAuthorization,
+            'timestamp' => $timestamp,
+            'nonceStr' => $nonceStr,
+            'key_version' => $keyVersion
+        ];
+    }
+    
+    
+        private function randStr($length = 8)
+    {
+        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $str = '';
+        for ($i = 0; $i < $length; $i++) {
+            $str .= $chars[random_int(0, strlen($chars) - 1)];
+        }
+        return $str;
+    }
+
+    private function getByteAuthorization($privateKeyStr, $data, $appId, $nonceStr, $timestamp, $keyVersion)
+    {
+        $privateKey = openssl_pkey_get_private($privateKeyStr);
+        if (!$privateKey) {
+            throw new PayException('DOUYINPAY_PRIVATE_KEY_ERROR');
+        }
+        $signature = $this->getSignature('POST', '/requestOrder', $timestamp, $nonceStr, $data, $privateKey);
+        return sprintf(
+            'SHA256-RSA2048 appid=%s,nonce_str=%s,timestamp=%s,key_version=%s,signature=%s',
+            $appId,
+            $nonceStr,
+            $timestamp,
+            $keyVersion,
+            $signature
+        );
+    }
+
+    private function getSignature($method, $url, $timestamp, $nonce, $data, $privateKey)
+    {
+        $targetStr = $method . "\n" . $url . "\n" . $timestamp . "\n" . $nonce . "\n" . $data . "\n";
+        openssl_sign($targetStr, $sign, $privateKey, OPENSSL_ALGO_SHA256);
+        return base64_encode($sign);
     }
 }
