@@ -309,10 +309,10 @@ class CorePayService extends BaseCoreService
         $money = $pay['money'];
         $body = $pay['body'];
         $trade_type = $pay['trade_type'];
-
+        
         if (!in_array($type, array_column((new CorePayChannelService())->getAllowPayTypeByChannel($site_id, $channel, $trade_type), 'key')))
             throw new PayException('PAYMENT_METHOD_NOT_SCENE');
-
+//dd(222222222);
         if ($member_id != 0) {
             $pay_info = $this->findPayInfoByTrade($site_id, $trade_type, $trade_id);
             $pay_info->save(['main_id' => $member_id]);
@@ -328,9 +328,9 @@ class CorePayService extends BaseCoreService
             'openid' => $openid,
             'voucher' => $voucher
         ];
-        // dd($params);
+     //    dd($params);
         $result = $this->pay_event->init($site_id, $channel, $type)->getRequestOrderParams($params);
-        // dd($result);
+         dd($result);
         $pay->save([
             'type' => $type,
             'status' => PayDict::STATUS_ING,

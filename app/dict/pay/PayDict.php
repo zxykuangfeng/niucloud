@@ -94,7 +94,8 @@ class PayDict
                             'key' => self::DOUYINPAY,
                             'icon' => self::DOUYINPAY_ICON,
                             'setting_component' => '/src/app/views/setting/components/pay-douyinpay.vue',
-                            'encrypt_params' => ['secret_key'],
+                                                        'encrypt_params' => ['secret_key', 'private_key'],
+
                         ],
         ];
 

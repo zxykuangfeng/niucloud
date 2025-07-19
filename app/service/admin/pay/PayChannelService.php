@@ -161,6 +161,7 @@ class PayChannelService extends BaseAdminService
      */
     public function getConfigByPayType($data, $type)
     {
+        //  dd($data);
         $config = [];
         switch ($type) {
             case PayDict::WECHATPAY:
@@ -206,9 +207,11 @@ class PayChannelService extends BaseAdminService
                 break;
                 case PayDict::DOUYINPAY:
                     $config = [
-                        'app_id' => $data['app_id'] ?? '',
-                        'merchant_id' => $data['merchant_id'] ?? '',
-                        'secret_key' => $data['secret_key'] ?? '',
+                            'app_id'       => $data['app_id'] ?? '',
+                        'merchant_id'  => $data['merchant_id'] ?? '',
+                        'secret_key'   => $data['secret_key'] ?? '',
+                        'private_key'  => $data['private_key'] ?? '',
+                        'key_version'  => $data['key_version'] ?? '1',
                     ];
                     break;    
             default:
