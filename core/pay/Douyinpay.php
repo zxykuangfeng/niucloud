@@ -214,36 +214,78 @@ class Douyinpay extends BasePay
         return false;
     }
     
-        /**
-     * 获取 tt.requestOrder 所需参数
-     * @param array $params
-     * @return array
-     * @throws PayException
-     */
-    public function getRequestOrderParams(array $params)
-    {
-        $data = $this->createOrder($params);
-        $dataStr = json_encode($data, JSON_UNESCAPED_UNICODE);
-        $timestamp = time();
-        $nonceStr = $this->randStr(10);
-        $keyVersion = $this->config['key_version'] ?? '1';
-        $byteAuthorization = $this->getByteAuthorization(
-            $this->config['secret_key'] ?? '',
-            $dataStr,
-            $this->config['app_id'] ?? '',
-            $nonceStr,
-            $timestamp,
-            $keyVersion
-        );
-        return [
-            'data' => $dataStr,
-            'byteAuthorization' => $byteAuthorization,
-            'timestamp' => $timestamp,
-            'nonceStr' => $nonceStr,
-            'key_version' => $keyVersion
-        ];
+/**
+ * 获取 tt.requestOrder 所需参数
+ * @param array $params
+ * @return array
+ * @throws PayException
+ */
+public function getRequestOrderParams(array $params)
+{
+    $outOrderNo = $params['outOrderNo'] ?? ($params['out_trade_no'] ?? '');
+    $totalAmount = $params['totalAmount'] ?? ($params['money'] ?? 0);
+    $title = $params['title'] ?? ($params['body'] ?? '商品名称');
+
+    // 金额转为整数，单位为“分”
+    if (!is_numeric($totalAmount)) {
+        $totalAmount = 0;
+    } else {
+        $totalAmount = (int) bcmul($totalAmount, 100);
     }
-    
+
+    // 默认图片列表
+    $imageList = $params['imageList'] ?? [];
+
+    // 构造 skuList
+    $skuList = $params['skuList'] ?? [
+        [
+            'skuId' => $outOrderNo,
+            'title' => $title,
+            'quantity' => 1,
+            'price' => $totalAmount,
+            'type' => 0,
+            'imageList' => $imageList
+        ]
+    ];
+
+    // ✅ 构造 orderEntrySchema，必须是对象，必须包含 path 字段
+    $orderEntrySchema = [
+    'path' => 'pages/order/detail',
+    'params' => json_encode(['orderId' => $outOrderNo], JSON_UNESCAPED_UNICODE),
+    'query' => 'orderId=' . $outOrderNo
+];
+
+    // 构造完整 data
+    $data = [
+        'skuList' => $skuList,
+        'outOrderNo' => $outOrderNo,
+        'totalAmount' => $totalAmount,
+        'payExpireSeconds' => $params['payExpireSeconds'] ?? ($params['valid_time'] ?? 600),
+        'payNotifyUrl' => $params['payNotifyUrl'] ?? ($this->config['notify_url'] ?? ''),
+        'orderEntrySchema' => $orderEntrySchema
+    ];
+
+    $dataStr = json_encode($data, JSON_UNESCAPED_UNICODE);
+    $timestamp = time();
+    $nonceStr = $this->randStr(10);
+    $keyVersion = $this->config['key_version'] ?? '1';
+    $byteAuthorization = $this->getByteAuthorization(
+        $this->config['private_key'] ?? '',
+        $dataStr,
+        $this->config['app_id'] ?? '',
+        $nonceStr,
+        $timestamp,
+        $keyVersion
+    );
+
+    return [
+        'data' => $dataStr, // 保持字符串，供前端 JSON.parse 或直接传入
+        'byteAuthorization' => $byteAuthorization,
+        'timestamp' => $timestamp,
+        'nonceStr' => $nonceStr,
+        'key_version' => $keyVersion
+    ];
+}
     
         private function randStr($length = 8)
     {
@@ -257,11 +299,69 @@ class Douyinpay extends BasePay
 
     private function getByteAuthorization($privateKeyStr, $data, $appId, $nonceStr, $timestamp, $keyVersion)
     {
-        $privateKey = openssl_pkey_get_private($privateKeyStr);
-        if (!$privateKey) {
-            throw new PayException('DOUYINPAY_PRIVATE_KEY_ERROR');
-        }
-        $signature = $this->getSignature('POST', '/requestOrder', $timestamp, $nonceStr, $data, $privateKey);
+        // $privateKey = openssl_pkey_get_private($privateKeyStr);
+        // if (!$privateKey) {
+        //     throw new PayException('DOUYINPAY_PRIVATE_KEY_ERROR');
+        // }
+        
+        $privateKey = <<<EOD
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAukbZSBLPo1g7YK5j8BiX6YG++HEkHKMhfX7EvpXyJIbg5QSy
+CEswgDTRMpNCQs/+Vt2BdJkSCwoKLjSkijWVLobsOewUBOncDcJKwztg5aOjaxaj
+8ig0aWIWnS994L0lq9OTf80cvaWOAMwAshZ44OiSYI1jObS1AaGFgokTeMasUKbR
+q8CLEfevf+lh2eEQZCPllYLYBeg5VTR+GHR20w6Mt6GpXMn4In8i5uK2wIsxHBca
+mOBtTGFWIT7NJYOZ+vUTi07wQvT4dhiljaD8aN8pKeqI0Er77xG3hQurA1DuJNRN
+eSg2vr3b3ZVZpU/I/LVaOoa0LeM2+0oac1pc7wIDAQABAoIBAG5lPrBwNY5g5A/Q
+SnoomR9SPZOPug8evuJZFtC8nNz48p/HwJsZtIzGwJRwoXxnOBzS+b3YWdEhCheI
+K1udleQVIjrRpquizT96PkSmFC8EY/07Vb5WBXnPIAfX9YoTjxfeNDQxoy7hxt7C
+CEeC+fCQ5O9D2+J/LibhSvaptliEopZ0/Eb0MQDc3I+d8RWbRmmt2BKDU5BmNqN/
+O6yzQqvPflPLroNDOI8MJjIn6YFkpu3OT53U4Vh+U8Y8mPryBzMc+r70d6mrPia9
+Yym64DWacHsHzCbiFr4QuMHsQ7TXuEE/uDXNGyh06S0w5fYzP694jpjf5L0U8eF8
+7nBVcAECgYEA6D7e6xfn2bYBxlNHZaHcBXTYxlayScPWhkaZVscgjSZZEHdh5uNf
+66+C3aBN+yk3vaaKE8QA1rStDITpyt4M9My4SPQkH7H/wIwTXHhrmKBJVdpVX8CJ
+TOiKSBefEDyoEpl8zjaj4uC87mYecHPUV9x9bj51Yz17lQuhnQFfNwECgYEAzVRT
+7miAAK7q6E0Y8APXgs7jwuoOeO5S04blMNXy17M7qryEttP90r+fYUk627HO40gQ
+VtjZ5iAd4DpOXsTi4lACYa+xBP3FjW2A+bs2e/upjwsV7iv6b5dhKWK9Zrmc6D7i
+e0TNTGVOYD6A2x7cXzuVUV+T1icgZv7MnCbRA+8CgYAEvOudTjKLrXvhyOcm+qNb
+dSPLAA/JE3a37I7KR2uxlXuxq03TAQZ+72izDscofZHGi7Q7bP87Yho5rCh83ATV
+pauIyXpHL0Fxcyod89L2HScB2l9tgacLa58Ok3TKRwKCxqDWMCUtxrnz/x9V2fcW
+B8iDTEDm0mVICCG260U/AQKBgG+OzJcwkbNNVfXmxZDKFZJNg/PHpRtRKREiLm3t
+ICbPi7CFAnovDa4uTJLX7bGllqln4vC8mw7sDi9gnmnhAQBCxjh682up0Wa4wyVr
+8PtFzWcZd83SeRueHL0Wl58zY6vPVs/wnrZOKFokO3BSARuAzOzMSA9HbNRoxZRl
+hpRjAoGBAKcEUqxTaWwBw9A5WEQDR0EfCnVsQNiV/wEo98m3gbtPx1DxyhSP51p+
+HMIyPCuxYAKgFf60tB908WPhHHZHJ9afhVMqZc3SWIYhcE3kH/3PHFVCItqaEW5/
+LUQNwmEalB4U6fqFHTVW2f7uUuqQAUgRrXgmtqwXTUppAGb5VXkK
+-----END RSA PRIVATE KEY-----
+EOD;
+
+$method = 'POST';
+$url = '/api/trade_basic/v1/user/order_create';
+$timestamp = '1753688758';
+$nonce = 'XU2YVY6G4E';
+
+$data = [
+    'skuList' => [[
+        'skuId' => '20250728590761576026112',
+        'title' => '清洁',
+        'quantity' => 1,
+        'price' => 5000,
+        'type' => 0,
+        'imageList' => [],
+    ]],
+    'outOrderNo' => '20250728590761576026112',
+    'totalAmount' => 5000,
+    'payExpireSeconds' => 600,
+    'payNotifyUrl' => 'https://carplus.ycwlgs.com/api/pay/notify/100001/douyin/douyinpay/pay',
+    'orderEntrySchema' => [
+        'path' => 'pages/order/detail',
+        'params' => json_encode(['orderId' => '20250728590761576026112'], JSON_UNESCAPED_UNICODE),
+        'query' => 'orderId=20250728590761576026112',
+    ]
+];
+
+$signature = $this->getSignature($method, $url, $timestamp, $nonce, $data, $privateKey);
+
+dd($signature);
         return sprintf(
             'SHA256-RSA2048 appid=%s,nonce_str=%s,timestamp=%s,key_version=%s,signature=%s',
             $appId,
@@ -272,10 +372,22 @@ class Douyinpay extends BasePay
         );
     }
 
-    private function getSignature($method, $url, $timestamp, $nonce, $data, $privateKey)
-    {
-        $targetStr = $method . "\n" . $url . "\n" . $timestamp . "\n" . $nonce . "\n" . $data . "\n";
-        openssl_sign($targetStr, $sign, $privateKey, OPENSSL_ALGO_SHA256);
-        return base64_encode($sign);
-    }
+ private function getSignature($method, $url, $timestamp, $nonce, $data, $privateKey)
+{
+ $text = 'POST\n/abc\n1680835692\ngjjRNfQlzoDIJtVDOfUe\n{\"eventTime\":1677653869000,\"status\":102}\n';
+ $priKey = file_get_contents("./private_key.pem");
+  $privateKey = openssl_get_privatekey($priKey, '');
+  
+  openssl_sign($text, $sign, $privateKey, OPENSSL_ALGO_SHA256);
+
+    $sign = base64_encode($sign);
+    
+    dd($sign);
+    return $sign;
+}
+    
+    
+    
+    
+    
 }
