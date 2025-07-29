@@ -90,7 +90,7 @@ class PayService extends BaseApiService
             $openid = $openid ? $openid : $member['douyin_openid'] ?? '';
         }
         
-        // dd($member);
+//   dd($trade_type);
         return $this->core_pay_service->douyinRequestOrderParams($this->site_id, $trade_type, $trade_id, $this->channel, $openid, $return_url, $quit_url, $buyer_id, $voucher, $this->member_id);
     }
     /**

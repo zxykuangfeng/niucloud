@@ -330,7 +330,7 @@ class CorePayService extends BaseCoreService
         ];
      //    dd($params);
         $result = $this->pay_event->init($site_id, $channel, $type)->getRequestOrderParams($params);
-         dd($result);
+        //  dd($result);
         $pay->save([
             'type' => $type,
             'status' => PayDict::STATUS_ING,

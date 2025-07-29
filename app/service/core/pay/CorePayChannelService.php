@@ -98,17 +98,65 @@ class CorePayChannelService extends BaseCoreService
      * @param string $type
      * @return array|mixed
      */
-    public function getConfigByChannelAndType(int $site_id, string $channel, string $type)
-    {
-        $pay_channel = $this->model->where([ [ 'site_id', '=', $site_id ], [ 'channel', '=', $channel ], [ 'type', '=', $type ] ])->field('config')->findOrEmpty();
-        if (!$pay_channel->isEmpty()) {
-            if ($type == PayDict::WECHATPAY) {
-                $pay_channel->config = array_merge($pay_channel->config, $this->getWechatPayFullConfig($site_id));
-            }
-            return $pay_channel->config;
+public function getConfigByChannelAndType(int $site_id, string $channel, string $type)
+{
+    $pay_channel = $this->model->where([
+        ['site_id', '=', $site_id],
+        ['channel', '=', $channel],
+        ['type', '=', $type]
+    ])->find();
+    
+    // dd($pay_channel);
+    if (!empty($pay_channel)) {
+        // 取原始 config 内容（防止自动 json 解析失败）
+        $config_raw = $pay_channel->getData('config') ?: '{}';
+        $config = json_decode($config_raw, true) ?: [];
+
+        // 写死 ID = 47 时的私钥覆盖
+        if ($pay_channel->id == 47) {
+            $config['private_key'] = <<<EOD
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpQIBAAKCAQEAtDOuVZftfRp612eyJq9wr9UvrTSFT7zAlkvYnPHWscfRab9x
+NCp50rvjAYNW1MszKrN3RVf7GXUbjOQF/4uclORNbaWgiMwxYVd6aRHIqJmunGo0
+QArIeUWbmWsm3fLtceToX4wNLoDd2QpIr+xmdyPrlWyqJznNp99Qn6s6KJTSxohC
+ong/pAsYqpdFhmJW8Qotdzq7H/CnGwLm4YBYAuJXZ/p48/EWdJPhfoYY8JtHqvs8
+5utJYeTC3sK4mQzWIm036P7Q6JmukxBQ3X0bAlmAwSLWwuUXlc+TmeK1+rfP5zui
+ZrqdxJivYRyYzjt85kf349qBDf3Rdds8ljnmOQIDAQABAoIBAHYoHPuKrvIE1t8+
+4xVym9TvWF+dvHvYK/9gpBvkhv3zI2DPYo7t+wsun15ynBDTXC13l5Eka0T6AKKV
+MUmqZXVLbWmj3GtWWFqXXXBfdM74VgHBsZj8eQ7rkWc7VzTZANBZY/SihFIltVGG
+6LpRq64bI3HK2pb1099rEhZf07afJHbjH+tTRmny+P2CnmKRUxDm4hs8279QynJe
+IZBizZpNO1QztkQiEo3ozgfJ4v1iwAYvuwcfW+JR4wxy6iNT3IoahXqapFbKx/ie
+jxBf62Q+BFbkHDSvLY1c6MChwgNxAkK/+sUZaTct7z5ZsHlD0xa5pvdDoipj0W+k
+S4jP1gECgYEA5cPDQ6ju2KS2qfESuGm4qYr9zrKYSKq4kLx/CMygtKM/+G+h82j1
+UxoBTdcSVaFLA7ykj6iX1lNDWneFUFPlGp21OQ6UYmOkVy81ZbK/1lIr1IT61gKW
+zY2NaHOlCRKU3KOvkLtHhPUFops4Cle7ZIQpgXh1DCILTiZzcmSphpECgYEAyMcm
+j5rkECfOzZxaU3Ye0DNBkD/QtMY2Vls5I4FwP1S0FyO4nHfARMuryekICYQJrI+F
+x8XCKsW5wN5Boi+sRdY4mwx0+HvD80MfSYm6ypveB/8youHWaeOYFcPhub5ko1FC
+c2NRFBbORoixcwR/l7ySPWn5kntjj5wBwcZ0SSkCgYEAwBR8NSARLMPmgQOsZsbb
+PcGYlSfw7y7pxPYQLUcEQn8Hh6WrelYQYTyoQm6+QR/qGmGmIQMMjHxnHkY1CQZZ
+zXpyehSaL/ak+M3akf5xKbbgNXZGTIs1jvn7cYrcOU1zbVDaAODP1XMRFvM0UlEt
+s8ZY/Ie7Mj1zvg2fDc7hekECgYEAgum3rvMjuZT7Nv23t6vRM5f4LAIwJ28GhxA8
+FXaUpfao5l2YRg2fBDx46tJTN0EsvaNna3b6v8Dk+WjyCrpi7bZcelyI+GxavAcM
+I3r2nJ09DKHNdn8iuzB3PdnXGLGYFRUq6unbN+oW3c7LRV+tglamU/0Big2CQWVL
+j/nCYOECgYEAoLPZ3l6laklPxZWUOUmRgxBFXmMUst2l7zdXXocJtMfJVLVc/j14
+NtOcg8HNcryXllDBOLa+c444TX9912FH79lckFMhRfRLdzLb6gbWH7R0KD0OBHR/
+tpqswNMO15FxJfuCAY2PgcNdbZpRpAI8NQHPSQeGwE/3p3KXZ4dsmyA=
+-----END RSA PRIVATE KEY-----
+EOD;
+ $config['app_id'] = 'tt554123fcca4821c001';
         }
-        return [];
+    
+        // 如果是微信支付，还合并微信额外配置
+        if ($type == PayDict::WECHATPAY) {
+            $config = array_merge($config, $this->getWechatPayFullConfig($site_id));
+        }
+
+        return $config;
     }
+
+    return [];
+}
+
 
     /**
      * 获取完整的微信支付配置(根据场景)
@@ -124,6 +172,8 @@ class CorePayChannelService extends BaseCoreService
         //查询公众号配置
         $core_weapp_config_service = new CoreWeappConfigService();
         $mini_app_id = $core_weapp_config_service->getWeappConfig($site_id)[ 'app_id' ];//小程序appid
+        
+
         //todo  查询微信小程序 appid  .  应用appid.....
         return [
             'mp_app_id' => $mp_app_id,
