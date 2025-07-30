@@ -236,7 +236,7 @@ class Douyinpay extends BasePay
     }
 
     // 默认图片列表
-    $imageList = $params['imageList'] ?? ['https://syzth.lysoo.com/public//uploads/20250728/2be92b2ecdfc1939f431d17ce4101981.jpg'];
+    $imageList = $params['imageList'] ?? [];
 
     // 构造 skuList
     $skuList = $params['skuList'] ?? [
@@ -245,12 +245,11 @@ class Douyinpay extends BasePay
             'title' => $title,
             'quantity' => 1,
             'price' => $totalAmount,
-            'type' => 302,
-            'imageList' => $imageList,
-            'tagGroupId'=>'301',
+            'type' => 0,
+            'imageList' => $imageList
         ]
     ];
-    // dd($skuList);
+
     // ✅ 构造 orderEntrySchema，必须是对象，必须包含 path 字段
     $orderEntrySchema = [
     'path' => 'pages/order/detail',
@@ -272,8 +271,8 @@ class Douyinpay extends BasePay
     $nonceStr = $this->randStr(10);
     // $keyVersion = 2;
     
-//     $timestamp = 1753781759;
-// $nonceStr = 'XU2YVY6G4E';
+    $timestamp = 1753778759;
+$nonceStr = 'XU2YVY6G4E';
 $keyVersion = 2;
      $dataStr = '';
     $byteAuthorization = $this->getByteAuthorization(
@@ -312,24 +311,12 @@ private function getByteAuthorization($privateKeyStr, $data, $appId, $nonceStr, 
     if (!$privateKey) {
         throw new PayException('DOUYINPAY_PRIVATE_KEY_ERROR');
     }
-    // dd($data);
-    $dataStr = sprintf(
-        '{"skuList":[{"skuId":"%s","title":"%s","quantity":1,"price":%d,"type":302,"imageList":["%s"],"tagGroupId":"%s"}],"outOrderNo":"%s","totalAmount":%d,"payExpireSeconds":%d,"payNotifyUrl":"%s","orderEntrySchema":{"path":"%s"}}',
-        $data['outOrderNo'],
-        $data['skuList'][0]['title'],
-        $data['skuList'][0]['price'],
-        $data['skuList'][0]['imageList'][0],
-        '302',
-        $data['outOrderNo'],
-        $data['totalAmount'],
-        $data['payExpireSeconds'],
-        $data['payNotifyUrl'],
-        $data['orderEntrySchema']['path']
-    );
+
+    $dataStr = json_encode($data, JSON_UNESCAPED_UNICODE);
 
     $dataStrOut = $dataStr; 
 
-    $signature = $this->getSignature('POST', '/requestOrder', $timestamp, $nonceStr, $dataStr, $privateKey);
+    $signature = $this->getSignature('POST', '/api/trade_basic/v1/user/order_create', $timestamp, $nonceStr, $dataStr, $privateKey);
 
     return sprintf(
         'SHA256-RSA2048 appid="%s",nonce_str="%s",timestamp="%s",key_version="%s",signature="%s"',
