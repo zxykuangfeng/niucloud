@@ -5,6 +5,9 @@ use app\service\api\toutiao\ToutiaoOpenService;
 use core\base\BaseApiController;
 use think\Response;
 
+
+//服务商相关方法 
+
 class Open extends BaseApiController
 {
     /**
@@ -46,7 +49,28 @@ class Open extends BaseApiController
         return success(['path' => $file]);
     }
     
+     /**
+     * 获取已授权抖音小程序的 access_token
+     * @return Response
+     */
+    public function getToutiaoAccessToken(): Response
+    {
+        $service = new ToutiaoOpenService();
+        $token = $service->getToutiaoAccessToken();
+        return success(['access_token' => $token]);
+    }
     
+    
+       /**
+     * 查询抖音标签组信息
+     * @return Response
+     */
+    public function getToutiaoTagGroup(): Response
+    {
+        $service = new ToutiaoOpenService();
+        $list = $service->getToutiaoTagGroup();
+        return success($list);
+    }
     /**
      * 获取已授权抖音小程序二维码
      * @return Response

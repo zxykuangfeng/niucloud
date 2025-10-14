@@ -75,5 +75,27 @@ class Toutiao extends BaseApiController
         $toutiao_auth_service = new ToutiaoAuthService();
         return success($toutiao_auth_service->updateOpenid($data[ 'code' ]));
     }
+    
+        /**
+     * 获取小程序 access_token
+     * @return Response
+     */
+    public function getAccessToken(): Response
+    {
+        $service = new ToutiaoAuthService();
+        $token = $service->getAccessToken();
+        return success(['access_token' => $token]);
+    }
 
+    /**
+     * 查询抖音标签组信息
+     * @return Response
+     */
+    public function getTagGroup(): Response
+    {
+        $service = new ToutiaoAuthService();
+        $list = $service->getTagGroup();
+        return success($list);
+    }
+    
 }

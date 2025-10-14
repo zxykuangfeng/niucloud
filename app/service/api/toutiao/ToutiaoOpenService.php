@@ -62,6 +62,30 @@ class ToutiaoOpenService extends BaseApiService
         return $this->core_service->getToutiaoQrcode($version, $path);
     }
     
+    
+    
+    /**
+     * 获取已授权抖音小程序的 access_token
+     * @return string
+     */
+    public function getToutiaoAccessToken(): string
+    {
+        return $this->core_service->getToutiaoAccessToken();
+    }
+    
+    
+     /**
+     * 查询抖音标签组信息
+     * @return array
+     */
+    public function getToutiaoTagGroup(): array
+    {
+        $token = $this->getToutiaoAccessToken();
+        if ($token === '') {
+            return [];
+        }
+        return $this->core_service->getToutiaoTagGroup($token);
+    }
       /**
      * 提审已授权抖音小程序
      * @param array $hostNames

@@ -252,5 +252,29 @@ public function getUserInfoByCode(string $code): array
         $member_service->editByFind($member_info, [ 'douyin_openid' => $openid ]);
         return true;
     }
+    
+    
+      /**
+     * 获取小程序 access_token
+     * @return string
+     */
+    public function getAccessToken(): string
+    {
+        return $this->core_toutiao_serve_service->getAccessToken($this->site_id);
+    }
+
+    /**
+     * 查询抖音标签组信息
+     * @return array
+     */
+    public function getTagGroup(): array
+    {
+        $token = $this->getAccessToken();
+        if ($token === "") {
+            return [];
+        }
+
+        return $this->core_toutiao_serve_service->getTagGroup($token);
+    }
 
 }

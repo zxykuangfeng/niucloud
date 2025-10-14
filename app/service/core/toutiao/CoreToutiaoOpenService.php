@@ -32,7 +32,33 @@ class CoreToutiaoOpenService extends BaseCoreService
         return json_decode($response->getBody()->getContents(), true);
     }
     
-    
+       /**
+     * 获取已授权抖音小程序的 access_token
+     * @return string
+     */
+    public function getToutiaoAccessToken(): string
+    {
+        $component = $this->getComponentAccessToken();
+        $componentAccessToken = $component['component_access_token'] ?? '';
+        if ($componentAccessToken === '') {
+            return '';
+        }
+
+        $config = (new CoreConfigService())->getConfigValue(100001, ConfigKeyDict::TOUTIAO_WANDU);
+        $authorizationAppid = $config['authorization_appid'] ?? ($config['app_id'] ?? '');
+        if ($authorizationAppid === '') {
+            return '';
+        }
+
+        $codeRes = $this->retrieveAuthCode($authorizationAppid, $componentAccessToken);
+        $authorizationCode = $codeRes['authorization_code'] ?? '';
+        if ($authorizationCode === '') {
+            return '';
+        }
+
+        $tokenRes = $this->getAuthorizerAccessToken($authorizationCode, $componentAccessToken);
+        return $tokenRes['authorizer_access_token'] ?? '';
+    }
     // authorizer_access_token
     //     public function getAuthorizerAccessToken(): array
     // {
@@ -264,6 +290,28 @@ public function getQrcode(array $params, string $authorizerAccessToken): string
                 'authorizer_access_token' => $authorizerAccessToken,
             ],
             'json' => $params,
+        ]);
+
+        return json_decode($response->getBody()->getContents(), true);
+    }
+    
+    
+        /**
+     * 查询抖音标签组信息
+     * @param string $accessToken 接口调用凭据
+     * @return array
+     */
+    public function getToutiaoTagGroup(string $accessToken): array
+    {
+        $client = new Client();
+        $response = $client->post('https://open.douyin.com/api/trade_basic/v1/developer/tag_query/', [
+            'headers' => [
+                'access-token' => $accessToken,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
+                'goods_type' => 302,
+            ],
         ]);
 
         return json_decode($response->getBody()->getContents(), true);
