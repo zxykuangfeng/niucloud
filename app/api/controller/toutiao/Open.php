@@ -103,4 +103,24 @@ class Open extends BaseApiController
         $res = $service->auditToutiaoPackage($params['host_names'], $params['audit_note'], $params['audit_way']);
         return success($res);
     }
+
+   
+    /**
+     * 创建抖音测试商品
+     * @return Response
+     */
+    public function createTestProduct(): Response
+    {
+        $params = $this->request->params([
+            ['access_token', ''],
+        ], false);
+
+        $payload = $this->request->param('payload', []);
+
+        $service = new ToutiaoOpenService();
+        $result = $service->createTestProduct($params['access_token'], is_array($payload) ? $payload : []);
+
+        return success($result);
+    }
+
 }

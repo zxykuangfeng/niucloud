@@ -97,4 +97,121 @@ class ToutiaoOpenService extends BaseApiService
     {
         return $this->core_service->auditToutiaoPackage($hostNames, $auditNote, $auditWay);
     }
+  /**
+     * 创建一个抖音测试商品
+     * @param string $accessToken 指定的 access_token
+     * @param array $payload 自定义商品结构
+     * @return array
+     */
+    public function createTestProduct(string $accessToken = '', array $payload = []): array
+    {
+        $tokenResponse = [];
+        if ($accessToken === '') {
+            $tokenResponse = $this->core_service->getOauthAccessToken();
+            $accessToken = $tokenResponse['data']['access_token'] ?? '';
+            if ($accessToken === '') {
+                return $tokenResponse;
+            }
+        }
+
+        $body = $this->buildTestProductPayload($payload);
+        
+      
+        $productResponse = $this->core_service->saveToutiaoProduct($accessToken, $body);
+  dd($productResponse);
+        return [
+            'access_token' => $accessToken,
+            'request_payload' => $body,
+            'token_response' => $tokenResponse,
+            'product_response' => $productResponse,
+        ];
+    }
+
+    /**
+     * 构建默认的测试商品结构
+     * @param array $payload
+     * @return array
+     */
+    protected function buildTestProductPayload(array $payload = []): array
+    {
+        $timestamp = time();
+    $default = [
+    "ability" => ["ignore_inapplicable_poi" => false],
+    "account_id" => "7210702973314271272",
+    "base" => [
+        "log_id" => uniqid('', true),
+        "caller" => "niucloud",
+    ],
+
+    "product" => [
+        "product_name" => "test",
+        "out_id" => "test-out-" . uniqid(),
+        "account_name" => "test",
+        "owner_account_id" => "7852080425400674587",
+        "biz_line" => "5",
+        "open_biz_type" => "1",
+        "product_type" => "22",
+        "product_sub_type" => "1",
+        "desc" => "NiuCloud",
+        "telephone" => ["010-12345678"],
+        "category_id" => "6108686888958459895",
+        "category_full_name" => "category",
+        "product_ext" => ["auto_online" => false,"display_price"=>["low_price"=>1000]],
+         "low_price"=> 100, 
+    ],
+
+    // ✅ 单SKU结构体
+    "sku" => [
+        "sku_id" => "sku-" . uniqid(),
+        "sku_name" => "SKU",
+        "status" => 1,
+        "origin_amount" => 10000,
+        "actual_amount" => 10000,
+         "low_price"=> 10000, 
+        "out_sku_id" => "out-sku-" . uniqid(),
+        "extra" => "extra",
+        "bind_skus" => [],
+        "attr_key_value_map" => [
+            "color" => "red",
+            "size" => "L",
+            "is_custom" => "false",
+            // 注意图片字段是结构体需转JSON字符串
+            "main_image" => json_encode([
+                ["url" => "https://example.com/test.jpg"]
+            ]),
+        ],
+        "stock" => [
+            "stock_qty" => 100,
+            "avail_qty" => 100,
+            "sold_qty" => 0,
+            "sold_count" => 0,
+            "frozen_qty" => 0,
+            "limit_type" => 1,
+        ],
+        "sku_ext" => [
+            "use_sub_rel_stock" => false,
+            "account_settle" => false,
+            "discount_promo" => [
+                "PlanId" => 0,
+                "BrandActivityId" => 0,
+                "PromoId" => 0
+            ],
+            "takeaway_presale_info" => [
+                "takeaway_presale_product_id" => 0,
+                "takeaway_presale_sku_id" => 0
+            ],
+            
+        ]
+    ],
+
+];
+
+
+        // if (empty($payload)) {
+        //     return $default;
+        // }
+        // dd($payload);
+        return array_replace_recursive($default, $payload);
+    }
+
 }

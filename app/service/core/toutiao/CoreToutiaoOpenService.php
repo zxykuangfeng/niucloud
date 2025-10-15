@@ -316,4 +316,51 @@ public function getQrcode(array $params, string $authorizerAccessToken): string
 
         return json_decode($response->getBody()->getContents(), true);
     }
+
+
+     /**
+     * 获取抖音开放平台 access_token
+     * @param string $code 授权码，留空则使用 client_credential 模式
+     * @return array
+     */
+    public function getOauthAccessToken(string $code = ''): array
+    {
+        $config = (new CoreConfigService())->getConfigValue(100001, ConfigKeyDict::TOUTIAO);
+
+        $formParams = [
+            'client_key' => 'tt3a734ccea57a93d001',
+            'client_secret' => '960d82e3d4e95eac12a1cb9dacc0620ff8cded7f',
+            'grant_type' =>'client_credential'
+        ];
+
+
+        $client = new Client();
+        $response = $client->post('https://open.douyin.com/oauth/client_token/', [
+            'headers' => [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+            'form_params' => $formParams,
+        ]);
+        // dd($response->getBody()->getContents());
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
+    /**
+     * 调用抖音商品创建接口
+     * @param string $accessToken
+     * @param array $payload
+     * @return array
+     */
+    public function saveToutiaoProduct(string $accessToken, array $payload): array
+    {
+        $client = new Client();
+        $response = $client->post('https://open.douyin.com/goodlife/v1/goods/product/save/', [
+            'headers' => [
+                'access-token' => $accessToken,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $payload,
+        ]);
+        return json_decode($response->getBody()->getContents(), true);
+    }
 }

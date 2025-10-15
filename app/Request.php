@@ -167,6 +167,8 @@ class Request extends \think\Request
      * @return array|string|null
      */
     public function apiSiteId(){
+        
+        // dd(system_name('api_site_id_name'));
         $site_id = (int)$this->header(system_name('api_site_id_name'));
         if (!$site_id) {
             $domain = str_replace(['http://', 'https://'], '', $this->header('host'));

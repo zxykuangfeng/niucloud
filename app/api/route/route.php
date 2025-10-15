@@ -67,6 +67,10 @@ Route::group(function() {
                 // 提审已授权抖音小程序
         Route::post('toutiao/authorized_audit', 'toutiao.Open/auditToutiaoPackage');
         Route::post('toutiao/qrcode', 'toutiao.Open/getQrcode');
+        Route::post('toutiao/getAccessToken', 'toutiao.Toutiao/getAccessToken');
+        Route::post('toutiao/getTagGroup', 'toutiao.Toutiao/getTagGroup');
+                Route::post('toutiao/test_product', 'toutiao.Open/createTestProduct');
+
     //小程序通过code注册
     Route::post('weapp/register', 'weapp.Weapp/register');
     // 获取小程序订阅消息模板id
