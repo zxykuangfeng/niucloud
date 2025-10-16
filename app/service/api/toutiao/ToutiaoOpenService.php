@@ -127,6 +127,32 @@ class ToutiaoOpenService extends BaseApiService
         ];
     }
 
+
+ /**
+     * 获取抖音商品类目
+     * @param string $accessToken
+     * @return array
+     */
+    public function getToutiaoGoodsCategory(string $accessToken = ''): array
+    {
+        $tokenResponse = [];
+        if ($accessToken === '') {
+            $tokenResponse = $this->core_service->getOauthAccessToken();
+            $accessToken = $tokenResponse['data']['access_token'] ?? '';
+            if ($accessToken === '') {
+                return $tokenResponse;
+            }
+        }
+
+        $categoryResponse = $this->core_service->getToutiaoGoodsCategory($accessToken);
+
+        return [
+            'access_token' => $accessToken,
+            'token_response' => $tokenResponse,
+            'category_response' => $categoryResponse,
+        ];
+    }
+
     /**
      * 构建默认的测试商品结构
      * @param array $payload
@@ -154,7 +180,7 @@ class ToutiaoOpenService extends BaseApiService
         "product_sub_type" => "1",
         "desc" => "NiuCloud",
         "telephone" => ["010-12345678"],
-        "category_id" => "6108686888958459895",
+        "category_id" => "6004002",
         "category_full_name" => "category",
         "product_ext" => ["auto_online" => false,"display_price"=>["low_price"=>1000]],
          "low_price"=> 100, 

@@ -70,7 +70,7 @@ Route::group(function() {
         Route::post('toutiao/getAccessToken', 'toutiao.Toutiao/getAccessToken');
         Route::post('toutiao/getTagGroup', 'toutiao.Toutiao/getTagGroup');
                 Route::post('toutiao/test_product', 'toutiao.Open/createTestProduct');
-
+      Route::post('toutiao/getToutiaoGoodsCategory', 'toutiao.Open/getToutiaoGoodsCategory');
     //小程序通过code注册
     Route::post('weapp/register', 'weapp.Weapp/register');
     // 获取小程序订阅消息模板id

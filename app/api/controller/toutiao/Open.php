@@ -123,4 +123,22 @@ class Open extends BaseApiController
         return success($result);
     }
 
+ /**
+     * 创建抖音测试商品
+     * @return Response
+     */
+    public function getToutiaoGoodsCategory(): Response
+    {
+        $params = $this->request->params([
+            ['access_token', ''],
+        ], false);
+
+        $payload = $this->request->param('payload', []);
+
+        $service = new ToutiaoOpenService();
+        $result = $service->getToutiaoGoodsCategory($params['access_token']);
+
+        return success($result);
+    }
+
 }

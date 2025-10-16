@@ -363,4 +363,29 @@ public function getQrcode(array $params, string $authorizerAccessToken): string
         ]);
         return json_decode($response->getBody()->getContents(), true);
     }
+    
+    
+    
+    /**
+     * 获取抖音商品类目
+     * @param string $accessToken
+     * @return array
+     */
+    public function getToutiaoGoodsCategory(string $accessToken): array
+    {
+        $client = new Client();
+        $response = $client->post('https://open.douyin.com/goodlife/v1/goods/category/get/', [
+            'headers' => [
+                'access-token' => $accessToken,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => [
+                'account_id' => '7210702973314271272',
+                'query_category_type' => 1,
+            ],
+        ]);
+
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
 }
